@@ -1,0 +1,100 @@
+<!-- Color Theme Picker Modal -->
+<div id="theme-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" id="close-theme-modal-btn">&times;</span>
+        <h2>🎨 Chọn Màu Chủ Đề</h2>
+        <div class="color-palette">
+            <button class="color-swatch" data-theme="default" style="background-color: #f72585;" title="Neon Pink"></button>
+            <button class="color-swatch" data-theme="blue" style="background-color: #3f88c5;" title="Ocean Blue"></button>
+            <button class="color-swatch" data-theme="green" style="background-color: #72b01d;" title="Forest Green"></button>
+            <button class="color-swatch" data-theme="orange" style="background-color: #ff5733;" title="Sunset Orange"></button>
+            <button class="color-swatch" data-theme="purple" style="background-color: #6a0572;" title="Royal Purple"></button>
+            <button class="color-swatch" data-theme="red" style="background-color: #d32f2f;" title="Crimson Red"></button>
+            <button class="color-swatch" data-theme="dark" style="background-color: #1a1a1a;" title="Midnight Dark"></button>
+            <button class="color-swatch" data-theme="light" style="background-color: #f0f0f0;" title="Bright Light"></button>
+            <button class="color-swatch" data-theme="teal" style="background-color: #008080;" title="Teal"></button>
+            <button class="color-swatch" data-theme="cyan" style="background-color: #00FFFF;" title="Cyan"></button>
+            <button class="color-swatch" data-theme="gold" style="background-color: #FFD700;" title="Gold"></button>
+            <button class="color-swatch" data-theme="violet" style="background-color: #EE82EE;" title="Violet"></button>
+        </div>
+    </div>
+</div>
+
+<!-- Login Modal -->
+<div id="login-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Đăng nhập</h2>
+        <form id="login-form-modal">
+            <label for="login-username">Tên người dùng</label>
+            <input type="text" id="login-username" required>
+            <label for="login-password">Mật khẩu</label>
+            <input type="password" id="login-password" required>
+            <button type="submit">Đăng nhập</button>
+            <p>Chưa có tài khoản? <a href="#" id="show-register-from-login">Đăng ký ngay!</a></p>
+        </form>
+    </div>
+</div>
+
+<!-- Register Modal -->
+<div id="register-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Đăng ký</h2>
+        <form id="register-form-modal">
+            <label for="register-name">Họ và tên</label>
+            <input type="text" id="register-name" required>
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" required>
+            <label for="register-username">Tên người dùng</label>
+            <input type="text" id="register-username" required>
+            <label for="register-password">Mật khẩu</label>
+            <input type="password" id="register-password" required>
+            <button type="submit">Đăng ký</button>
+            <p>Đã có tài khoản? <a href="#" id="show-login-from-register">Đăng nhập ngay!</a></p>
+        </form>
+    </div>
+</div>
+
+<!-- Profile Modal -->
+<div id="profile-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Thông tin cá nhân</h2>
+        <div id="profile-view">
+            <p><strong>Họ và tên:</strong> <span id="profile-name"></span></p>
+            <p><strong>Email:</strong> <span id="profile-email"></span></p>
+            <p><strong>Ngày sinh:</strong> <span id="profile-dob"></span></p>
+            <p><strong>Giới tính:</strong> <span id="profile-gender"></span></p>
+            <p><strong>Nghề nghiệp:</strong> <span id="profile-occupation"></span></p>
+            <p><strong>Tiểu sử:</strong> <span id="profile-bio"></span></p>
+            <p><strong>Tên người dùng:</strong> <span id="profile-username"></span></p>
+            <p><strong>Tổng điểm tích lũy:</strong> <span id="profile-points"></span></p>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button id="edit-profile-btn" class="auth-btn">Chỉnh sửa</button>
+                <button id="logout-btn" class="auth-btn logout-btn" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #ef4444;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
+            </div>
+        </div>
+        <form id="edit-profile-form" style="display: none;">
+            <label for="edit-name">Họ và tên:</label>
+            <input type="text" id="edit-name">
+            <label for="edit-email">Email:</label>
+            <input type="email" id="edit-email">
+            <label for="edit-dob">Ngày sinh:</label>
+            <input type="date" id="edit-dob">
+            <label for="edit-gender">Giới tính:</label>
+            <select id="edit-gender">
+                <option value="">Chọn giới tính</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+                <option value="Khác">Khác</option>
+            </select>
+            <label for="edit-occupation">Nghề nghiệp:</label>
+            <input type="text" id="edit-occupation">
+            <label for="edit-bio">Tiểu sử:</label>
+            <textarea id="edit-bio"></textarea>
+            <button type="submit" id="save-profile-btn">Lưu thay đổi</button>
+            <button type="button" id="cancel-edit-btn">Hủy</button>
+        </form>
+    </div>
+</div>

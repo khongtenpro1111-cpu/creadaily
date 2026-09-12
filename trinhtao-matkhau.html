@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trình Tạo Mật Khẩu</title>
+    <link rel="icon" type="image/png" href="img/logo/favicon-round.png">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+
+        h1, h2, h3, h4 {
+            font-weight: 600;
+        }
+
+        /* ==================== HIỆU ỨNG RIÊNG CHO CÔNG CỤ ==================== */
+        .password-container {
+            max-width: 500px;
+            margin: 0 auto 50px;
+            padding: 35px 30px;
+            text-align: center;
+            background: var(--card-bg) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius-lg, 20px) !important;
+            border: 1px solid var(--card-border) !important;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .password-display-area {
+            width: 100%;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            cursor: pointer;
+            box-sizing: border-box;
+            word-wrap: break-word; /* Đảm bảo mật khẩu dài không bị tràn */
+        }
+        
+        .password-display-area.copied {
+            border-color: var(--button-success);
+            box-shadow: 0 0 10px var(--button-success);
+        }
+
+        .password-controls {
+            margin-top: 20px;
+        }
+        
+        .password-controls label {
+            display: block;
+            text-align: left;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .password-controls input[type="range"] {
+            width: 100%;
+        }
+        
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-top: 15px;
+        }
+        
+        .option-group label {
+            margin: 5px 0;
+            cursor: pointer;
+        }
+
+        .generate-btn {
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            background-color: var(--main-color);
+            color: var(--text-color);
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            background-color: var(--accent-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ==================== MEDIA QUERIES (RESPONSIVE) ==================== */
+        @media (max-width: 768px) {
+            .password-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <header class="header-inspiration" style="padding: 3rem 1rem; text-align: center;">
+        <h1>Trình Tạo Mật Khẩu</h1>
+        <p>Tạo mật khẩu mạnh và an toàn chỉ với một cú nhấp</p>
+    </header>
+
+    <main style="padding: 2rem 1rem;">
+        <div class="password-container">
+            <h2>Tạo Mật Khẩu</h2>
+            <input type="text" id="password-display" class="password-display-area" value="Mật khẩu của bạn" readonly>
+            
+            <div class="password-controls">
+                <label for="password-length">Độ dài mật khẩu: <span id="length-value">12</span></label>
+                <input type="range" id="password-length" min="8" max="100" value="12">
+                
+                <div class="option-group">
+                    <label><input type="checkbox" id="include-uppercase" checked> Bao gồm chữ in hoa</label>
+                    <label><input type="checkbox" id="include-numbers" checked> Bao gồm số</label>
+                    <label><input type="checkbox" id="include-symbols" checked> Bao gồm ký tự đặc biệt</label>
+                </div>
+            </div>
+            
+            <button id="generate-btn" class="generate-btn">Tạo Mật Khẩu</button>
+            <p id="copy-message" style="color: var(--button-success); margin-top: 10px; visibility: hidden;">Mật khẩu đã được sao chép!</p>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+    <div id="music-placeholder"></div>
+    <div id="modals-placeholder"></div>
+
+    <script src="layout.js"></script>
+    <script src="main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const passwordDisplay = document.getElementById('password-display');
+            const passwordLengthEl = document.getElementById('password-length');
+            const lengthValueEl = document.getElementById('length-value');
+            const includeUppercaseEl = document.getElementById('include-uppercase');
+            const includeNumbersEl = document.getElementById('include-numbers');
+            const includeSymbolsEl = document.getElementById('include-symbols');
+            const generateBtn = document.getElementById('generate-btn');
+            const copyMessageEl = document.getElementById('copy-message');
+
+            const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+            const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numberChars = '0123456789';
+            const symbolChars = '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+
+            lengthValueEl.textContent = passwordLengthEl.value;
+            passwordLengthEl.addEventListener('input', (event) => {
+                lengthValueEl.textContent = event.target.value;
+            });
+
+            function generatePassword() {
+                const length = passwordLengthEl.value;
+                let characterSet = lowercaseChars;
+                let password = '';
+
+                if (includeUppercaseEl.checked) {
+                    characterSet += uppercaseChars;
+                }
+                if (includeNumbersEl.checked) {
+                    characterSet += numberChars;
+                }
+                if (includeSymbolsEl.checked) {
+                    characterSet += symbolChars;
+                }
+
+                if (characterSet.length === 0) {
+                    passwordDisplay.value = 'Chọn ít nhất một tùy chọn';
+                    return;
+                }
+
+                for (let i = 0; i < length; i++) {
+                    const randomIndex = Math.floor(Math.random() * characterSet.length);
+                    password += characterSet[randomIndex];
+                }
+
+                passwordDisplay.value = password;
+            }
+
+            // Tạo mật khẩu ban đầu
+            generatePassword();
+
+            generateBtn.addEventListener('click', generatePassword);
+
+            // Chức năng copy mật khẩu
+            passwordDisplay.addEventListener('click', () => {
+                const passwordText = passwordDisplay.value;
+                if (passwordText && passwordText !== 'Chọn ít nhất một tùy chọn') {
+                    navigator.clipboard.writeText(passwordText).then(() => {
+                        copyMessageEl.style.visibility = 'visible';
+                        setTimeout(() => {
+                            copyMessageEl.style.visibility = 'hidden';
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Không thể sao chép mật khẩu: ', err);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

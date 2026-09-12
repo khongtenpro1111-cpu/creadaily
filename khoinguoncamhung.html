@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thư viện Khơi nguồn Cảm hứng</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="khoinguoncamhung.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <header class="header-inspiration">
+        <h1>Thư viện Khơi nguồn Cảm hứng</h1>
+        <p>Tìm kiếm ý tưởng sáng tạo cho riêng bạn!</p>
+    </header>
+    <main>
+        <section id="inspiration-library" class="section-container">
+            <h2>Gợi ý hôm nay</h2>
+            <div id="inspiration-ideas-container" class="grid-container"></div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inspirationIdeasContainer = document.getElementById('inspiration-ideas-container');
+
+            const inspirationIdeas = [
+                {
+                    type: 'sound',
+                    title: 'Gợi ý âm thanh',
+                    content: 'Hãy tưởng tượng tiếng mưa rơi trên mái tôn và viết một đoạn văn hoặc sáng tác một bài thơ về nó.'
+                },
+                {
+                    type: 'story',
+                    title: 'Gợi ý câu chuyện',
+                    content: 'Bắt đầu câu chuyện của bạn với dòng: "Trong ngăn kéo cũ kỹ, tôi tìm thấy một chiếc chìa khóa mà tôi chưa từng thấy bao giờ..."'
+                },
+                {
+                    type: 'sound',
+                    title: 'Gợi ý âm thanh',
+                    content: 'Hãy tưởng tượng tiếng sóng biển vỗ vào bờ cát và viết một bản nhạc hoặc một bài thơ về nó.'
+                },
+                {
+                    type: 'story',
+                    title: 'Gợi ý câu chuyện',
+                    content: 'Bắt đầu câu chuyện của bạn với dòng: "Ánh sáng cuối cùng của mặt trời tắt dần, và cánh cửa bí mật đã mở ra..."'
+                }
+            ];
+
+            function renderInspiration() {
+                if (!inspirationIdeasContainer) return;
+
+                inspirationIdeasContainer.innerHTML = '';
+                
+                const shuffledIdeas = [...inspirationIdeas].sort(() => 0.5 - Math.random());
+                
+                const randomIdeas = shuffledIdeas.slice(0, 3);
+                
+                randomIdeas.forEach(idea => {
+                    const ideaElement = document.createElement('div');
+                    ideaElement.classList.add('idea-item');
+                    ideaElement.classList.add(idea.type);
+
+                    let contentHtml = '';
+                    if (idea.type === 'image' && idea.mediaUrl) {
+                        contentHtml = `<img src="${idea.mediaUrl}" alt="${idea.title}">`;
+                    }
+                    
+                    ideaElement.innerHTML = `
+                        <h3>${idea.title}</h3>
+                        ${contentHtml}
+                        <p>${idea.content}</p>
+                    `;
+                    
+                    inspirationIdeasContainer.appendChild(ideaElement);
+                });
+            }
+
+            renderInspiration();
+        });
+    </script>
+    <div id="footer-placeholder"></div>
+    <div id="music-placeholder"></div>
+    <div id="modals-placeholder"></div>
+
+    <script src="layout.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

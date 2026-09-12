@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bắt Kẻ Trộm</title>
+    <link rel="stylesheet" href="batketrom.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Bắt Kẻ Trộm</h1>
+        <p>Bắt càng nhiều trộm càng tốt, tránh những người vô tội!</p>
+    </header>
+
+    <main id="game-container">
+        <div id="game-area"></div>
+        <div id="game-info">
+            <p>Điểm: <span id="score">0</span></p>
+            <p>Thời gian: <span id="time">240</span>s</p>
+            <p id="message">Nhấn Bắt đầu để chơi!</p>
+            <button id="start-btn">Bắt đầu</button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameArea = document.getElementById('game-area');
+            const scoreDisplay = document.getElementById('score');
+            const timeDisplay = document.getElementById('time');
+            const messageEl = document.getElementById('message');
+            const startBtn = document.getElementById('start-btn');
+
+            let score = 0;
+            let timeLeft = 240;
+            let gameInterval;
+            let characterInterval;
+            let isGameOver = false;
+
+            const characters = ['trộm', 'người vô tội'];
+            const characterImages = {
+                'trộm': 'img/burglar-4925202_640.jpg',
+                'người vô tội': 'img/nhan-vat-hoat-hinh-noi-tieng-2772_583.webp'
+            };
+
+            const getRandomPosition = () => {
+                const gameAreaRect = gameArea.getBoundingClientRect();
+                const charSize = 80;
+                const maxX = gameAreaRect.width - charSize;
+                const maxY = gameAreaRect.height - charSize;
+                const randomX = Math.random() * maxX;
+                const randomY = Math.random() * maxY;
+                return { x: randomX, y: randomY };
+            };
+
+            const createCharacter = () => {
+                const character = document.createElement('img');
+                const charType = characters[Math.floor(Math.random() * characters.length)];
+                character.src = characterImages[charType];
+                character.classList.add('character', charType);
+
+                const { x, y } = getRandomPosition();
+                character.style.left = `${x}px`;
+                character.style.top = `${y}px`;
+
+                character.addEventListener('click', () => {
+                    if (charType === 'trộm') {
+                        score++;
+                        scoreDisplay.textContent = score;
+                        character.remove();
+                    } else {
+                        endGame();
+                    }
+                });
+
+                gameArea.appendChild(character);
+            };
+
+            const startGame = () => {
+                if (!isGameOver) {
+                    isGameOver = false;
+                    score = 0;
+                    timeLeft = 240;
+                    scoreDisplay.textContent = score;
+                    timeDisplay.textContent = timeLeft;
+                    messageEl.textContent = 'Bắt đầu bắt trộm!';
+                    startBtn.textContent = 'Chơi lại';
+                    gameArea.innerHTML = '';
+
+                    characterInterval = setInterval(createCharacter, 1000);
+                    gameInterval = setInterval(() => {
+                        timeLeft--;
+                        timeDisplay.textContent = timeLeft;
+                        if (timeLeft <= 0) {
+                            endGame(true);
+                        }
+                    }, 1000);
+                }
+            };
+
+            const endGame = (isTimeUp = false) => {
+                isGameOver = true;
+                clearInterval(characterInterval);
+                clearInterval(gameInterval);
+                
+                if (isTimeUp) {
+                    messageEl.textContent = `Hết giờ! Bạn đã bắt được ${score} tên trộm.`;
+                } else {
+                    messageEl.textContent = `Bạn đã bắt nhầm người! Điểm cuối cùng: ${score}`;
+                }
+                startBtn.textContent = 'Chơi lại';
+                
+                gameArea.innerHTML = '';
+            };
+
+            startBtn.addEventListener('click', startGame);
+        });
+    </script>
+</body>
+</html>

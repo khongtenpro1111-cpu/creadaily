@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bộ Đếm Thời Gian</title>
+    <link rel="icon" type="image/png" href="img/logo/favicon-round.png">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+
+        h1, h2, h3, h4 {
+            font-weight: 600;
+        }
+
+        /* ==================== HIỆU ỨNG RIÊNG CHO ĐỒNG HỒ ==================== */
+        .timer-container {
+            max-width: 500px;
+            margin: 0 auto 50px;
+            padding: 35px 30px;
+            text-align: center;
+            background: var(--card-bg) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius-lg, 20px) !important;
+            border: 1px solid var(--card-border) !important;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        #timer-display {
+            font-size: 5em;
+            font-weight: 700;
+            color: var(--main-color);
+            margin-top: 20px;
+        }
+
+        .timer-controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .timer-input {
+            width: 80%;
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+
+        .timer-button {
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: none;
+            color: var(--text-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timer-button.start {
+            background-color: var(--accent-color);
+        }
+        .timer-button.pause {
+            background-color: #fca311;
+        }
+        .timer-button.reset {
+            background-color: var(--button-danger);
+        }
+
+        /* ==================== MEDIA QUERIES (RESPONSIVE) ==================== */
+        @media (max-width: 768px) {
+            .timer-controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <header class="header-inspiration" style="padding: 3rem 1rem; text-align: center;">
+        <h1>Bộ Đếm Thời Gian</h1>
+        <p>Công cụ quản lý thời gian hiệu quả cho mọi thử thách</p>
+    </header>
+
+    <main style="padding: 2rem 1rem;">
+        <div class="timer-container">
+            <h2>Đặt Thời Gian</h2>
+            <input type="text" id="time-input" class="timer-input" placeholder="Nhập số giây">
+            <div id="timer-display">00:00</div>
+            <div class="timer-controls">
+                <button id="start-btn" class="timer-button start">Bắt Đầu</button>
+                <button id="pause-btn" class="timer-button pause">Tạm Dừng</button>
+                <button id="reset-btn" class="timer-button reset">Đặt Lại</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+    <div id="music-placeholder"></div>
+    <div id="modals-placeholder"></div>
+
+    <script src="layout.js"></script>
+    <script src="main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const timeInput = document.getElementById('time-input');
+            const timerDisplay = document.getElementById('timer-display');
+            const startBtn = document.getElementById('start-btn');
+            const pauseBtn = document.getElementById('pause-btn');
+            const resetBtn = document.getElementById('reset-btn');
+
+            let timerId;
+            let timeLeft = 0;
+            let isRunning = false;
+
+            function updateDisplay() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            function startTimer() {
+                if (!isRunning && timeLeft > 0) {
+                    isRunning = true;
+                    timerId = setInterval(() => {
+                        timeLeft--;
+                        updateDisplay();
+                        if (timeLeft <= 0) {
+                            clearInterval(timerId);
+                            isRunning = false;
+                            alert("Hết giờ!");
+                        }
+                    }, 1000);
+                }
+            }
+
+            function pauseTimer() {
+                if (isRunning) {
+                    clearInterval(timerId);
+                    isRunning = false;
+                }
+            }
+
+            function resetTimer() {
+                pauseTimer();
+                const inputValue = parseInt(timeInput.value);
+                timeLeft = isNaN(inputValue) ? 0 : inputValue;
+                updateDisplay();
+            }
+
+            startBtn.addEventListener('click', startTimer);
+            pauseBtn.addEventListener('click', pauseTimer);
+            resetBtn.addEventListener('click', resetTimer);
+
+            timeInput.addEventListener('input', () => {
+                const inputValue = parseInt(timeInput.value);
+                timeLeft = isNaN(inputValue) ? 0 : inputValue;
+                updateDisplay();
+            });
+
+            updateDisplay();
+        });
+    </script>
+</body>
+</html>

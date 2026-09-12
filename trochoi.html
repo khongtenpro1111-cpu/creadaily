@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="img/logo/favicon-round.png">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="trochoi.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <header class="header-game">
+        <h1>Danh Mục Trò Chơi</h1>
+        <p>Giải trí với những trò chơi nhỏ thú vị!</p>
+    </header>
+    <main>
+        <section id="games-section" class="section-container">
+            <div id="games-container" class="game-grid">
+            </div>
+            <div id="game-play-area">
+                <button id="back-to-games-btn" class="back-btn">Quay lại danh sách trò chơi</button>
+                <h2>Đang chơi: <span id="current-game-title"></span></h2>
+                <iframe id="game-iframe" src="" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gamesContainer = document.getElementById('games-container');
+            const gamePlayArea = document.getElementById('game-play-area');
+            const currentGameTitle = document.getElementById('current-game-title');
+            const gameIframe = document.getElementById('game-iframe');
+            const backToGamesBtn = document.getElementById('back-to-games-btn');
+
+            const games = [
+                { id: 'g1', title: 'Rắn Săn Mồi', image: 'img/game/SSSnaker-thumb.webp', link: 'ransanmoi.html', type: 'internal' },
+                { id: 'g2', title: 'Cờ Caro', image: 'img/game/choi-co-caro-luon-thang_4_.webp', link: 'caro.html', type: 'internal' },
+                { id: 'g3', title: 'Game 2048', image: 'img/game/2048game.webp', link: '2048.html', type: 'internal' },
+                { id: 'g4', title: 'Trò Vô Tri', image: 'img/game/gamevotri.png', link: 'gamevotri.html', type: 'internal'},
+                { id: 'g5', title: 'Game Cay Cú', image: 'img/game/gamecaycu.png', link: 'gamecaycu.html', type: 'internal' },
+                { id: 'g6', title: 'Bắn Bong Bóng', image: 'img/game/hinh-anh-bong-bong-dep-nhieu-mau_102244746.webp', link: 'banbongbong.html', type: 'internal' },
+                { id: 'g7', title: 'Flappy Bird', image: 'img/game/flappybird.webp', link: 'https://funhtml5games.com?embed=flappy', type: 'external' },
+                { id: 'g8', title: 'Master Chess', image: 'img/game/master-chess-300x169.webp', link: 'https://www.y8.com/games/master_chess', type: 'external' }
+            ];
+
+            function renderGames() {
+                gamesContainer.innerHTML = '';
+                games.forEach(game => {
+                    const gameElement = document.createElement('div');
+                    gameElement.classList.add('game-item');
+
+                    const gameLink = document.createElement('a');
+                    gameLink.href = game.link;
+                    if (game.type === 'external') {
+                        gameLink.target = "_blank";
+                    }
+
+                    gameLink.innerHTML = `
+                        <img src="${game.image}" alt="${game.title}">
+                        <h3>${game.title}</h3>
+                        <span class="play-btn">Chơi ngay</span>
+                    `;
+                    
+                    gameElement.appendChild(gameLink);
+                    gamesContainer.appendChild(gameElement);
+                });
+            }
+
+            backToGamesBtn.addEventListener('click', () => {
+                gamesContainer.style.display = 'grid';
+                gamePlayArea.style.display = 'none';
+                gameIframe.src = ''; 
+            });
+
+            renderGames();
+        });
+    </script>
+    <div id="footer-placeholder"></div>
+    <div id="music-placeholder"></div>
+    <div id="modals-placeholder"></div>
+
+    <script src="layout.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

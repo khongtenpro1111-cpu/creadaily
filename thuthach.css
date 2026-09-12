@@ -1,0 +1,818 @@
+/* ==================== CÁC BIẾN VÀ KIỂU CHUNG ==================== */
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+h1, h2 {
+    font-family: 'Poppins', sans-serif;
+    color: var(--main-color);
+    text-align: center;
+    font-weight: 700;
+    text-shadow: 0 0 5px rgba(247, 37, 133, 0.5);
+}
+
+.header-challenge {
+    background-color: var(--card-bg);
+    padding: 40px 20px 20px;
+    text-align: center;
+    border-bottom: 3px solid var(--accent-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+main {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* ==================== CÁC KIỂU CHO TRANG THỬ THÁCH ==================== */
+.challenge-box {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    border: 2px solid;
+    border-image: linear-gradient(45deg, var(--main-color), var(--accent-color)) 1;
+    margin-bottom: 40px;
+}
+
+.challenge-box h2 {
+    margin-top: 0;
+    font-size: 1.8em;
+    color: var(--accent-color);
+}
+
+.challenge-box p {
+    font-size: 1.2em;
+    font-style: italic;
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+.primary-btn {
+    background: linear-gradient(45deg, var(--main-color), #ff8c42);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), 0 0 15px var(--main-color);
+}
+
+.section-container {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    margin-bottom: 30px;
+    border: 2px solid;
+    border-image: linear-gradient(45deg, var(--main-color), var(--accent-color)) 1;
+}
+
+.section-container h2 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding-top: 20px;
+}
+
+.post-item {
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.post-item img, .post-item video, .post-item audio {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.post-item h4 {
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: var(--accent-color);
+}
+
+.post-item p {
+    color: var(--secondary-text-color);
+    font-size: 0.9em;
+    margin: 0;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--main-color);
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal-content h2 {
+    color: var(--accent-color);
+    border-bottom: 2px solid var(--main-color);
+    padding-bottom: 10px;
+}
+
+.close-btn {
+    color: var(--text-color);
+    position: absolute;
+    top: 15px;
+    right: 30px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: var(--main-color);
+}
+
+#upload-form input, #upload-form textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.file-label {
+    display: block;
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 2px dashed var(--accent-color);
+    color: var(--secondary-text-color);
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.file-label:hover {
+    border-color: var(--main-color);
+}
+
+.file-label input[type="file"] {
+    display: none;
+}
+
+.submit-btn {
+    width: 100%;
+    background: linear-gradient(45deg, var(--button-success), #a2e88f);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3), 0 0 10px var(--button-success);
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.actions button {
+    background-color: var(--border-color);
+    color: var(--text-color);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.actions .like-btn {
+    color: var(--main-color);
+}
+
+.actions .like-btn:hover {
+    background-color: var(--main-color);
+    color: white;
+}
+
+.actions .edit-btn:hover {
+    background-color: var(--accent-color);
+}
+
+.actions .delete-btn:hover {
+    background-color: var(--button-danger);
+}
+
+.comments-container {
+    margin-top: 15px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
+}
+
+.comment {
+    background-color: var(--bg-color);
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comment-actions button {
+    padding: 3px 8px;
+    font-size: 0.8em;
+}
+
+#notification-modal .modal-content {
+    background-color: var(--main-color);
+    color: var(--text-color);
+    border: none;
+    box-shadow: 0 5px 20px rgba(247, 37, 133, 0.5);
+    animation: slideInFromTop 0.5s ease-out;
+    top: 50px;
+    margin: 0 auto;
+}
+
+@keyframes slideInFromTop {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Thêm các chủ đề mới */
+body[data-theme="teal"] {
+    --bg-color: #0a1a1a;
+    --main-color: #008080;
+    --accent-color: #00b3b3;
+    --card-bg: #143333;
+    --border-color: #234d4d;
+    --text-color: #e0fafa;
+    --secondary-text-color: #a0c0c0;
+    --button-success: #20b2aa;
+    --button-danger: #e63964;
+}
+
+body[data-theme="brown"] {
+    --bg-color: #261a12;
+    --main-color: #8B4513;
+    --accent-color: #a0522d;
+    --card-bg: #3b2c21;
+    --border-color: #4d3a2b;
+    --text-color: #f5f5dc;
+    --secondary-text-color: #d2b48c;
+    --button-success: #cd853f;
+    --button-danger: #e63964;
+}
+
+body[data-theme="cyan"] {
+    --bg-color: #1a2a2a;
+    --main-color: #00FFFF;
+    --accent-color: #40e0d0;
+    --card-bg: #2b3d3d;
+    --border-color: #3b4d4d;
+    --text-color: #e0ffff;
+    --secondary-text-color: #a0ffff;
+    --button-success: #00ced1;
+    --button-danger: #e63964;
+}
+
+body[data-theme="indigo"] {
+    --bg-color: #0e0e1e;
+    --main-color: #4B0082;
+    --accent-color: #6a0572;
+    --card-bg: #1e1e2d;
+    --border-color: #2b2b3b;
+    --text-color: #e6e6fa;
+    --secondary-text-color: #a0a0c0;
+    --button-success: #8a2be2;
+    --button-danger: #e63964;
+}
+
+body[data-theme="maroon"] {
+    --bg-color: #1a0a0a;
+    --main-color: #800000;
+    --accent-color: #b22222;
+    --card-bg: #2a1414;
+    --border-color: #3b2b2b;
+    --text-color: #faf0e6;
+    --secondary-text-color: #d2b48c;
+    --button-success: #cd5c5c;
+    --button-danger: #e63964;
+}
+
+body[data-theme="olive"] {
+    --bg-color: #1a1a0a;
+    --main-color: #808000;
+    --accent-color: #bdb76b;
+    --card-bg: #2a2a14;
+    --border-color: #3b3b2b;
+    --text-color: #f0e68c;
+    --secondary-text-color: #d8c89b;
+    --button-success: #9acd32;
+    --button-danger: #e63964;
+}
+
+body[data-theme="salmon"] {
+    --bg-color: #2e1a1a;
+    --main-color: #FA8072;
+    --accent-color: #e9967a;
+    --card-bg: #3d2b2b;
+    --border-color: #4d3a3a;
+    --text-color: #fff0f5;
+    --secondary-text-color: #d8c0b5;
+    --button-success: #ff7f50;
+    --button-danger: #e63964;
+}
+
+body[data-theme="slate"] {
+    --bg-color: #1e262c;
+    --main-color: #708090;
+    --accent-color: #a0b0c0;
+    --card-bg: #2d3840;
+    --border-color: #3c4950;
+    --text-color: #e8f0f8;
+    --secondary-text-color: #b8c8d8;
+    --button-success: #6a5acd;
+    --button-danger: #e63964;
+}
+
+body[data-theme="coral"] {
+    --bg-color: #2e1a1a;
+    --main-color: #FF7F50;
+    --accent-color: #ff6347;
+    --card-bg: #3d2b2b;
+    --border-color: #4d3a3a;
+    --text-color: #fff0f5;
+    --secondary-text-color: #d8c0b5;
+    --button-success: #ff4500;
+    --button-danger: #e63964;
+}
+
+body[data-theme="gold"] {
+    --bg-color: #261f12;
+    --main-color: #FFD700;
+    --accent-color: #daa520;
+    --card-bg: #382e1c;
+    --border-color: #4b3d2b;
+    --text-color: #fff8dc;
+    --secondary-text-color: #e0d5c9;
+    --button-success: #ffc400;
+    --button-danger: #e63964;
+}
+
+body[data-theme="khaki"] {
+    --bg-color: #2e2a1e;
+    --main-color: #F0E68C;
+    --accent-color: #bdb76b;
+    --card-bg: #3d3b2d;
+    --border-color: #4d4b3c;
+    --text-color: #fff;
+    --secondary-text-color: #d8d2b8;
+    --button-success: #9acd32;
+    --button-danger: #e63964;
+}
+
+body[data-theme="navy"] {
+    --bg-color: #08081a;
+    --main-color: #000080;
+    --accent-color: #0000cd;
+    --card-bg: #10102a;
+    --border-color: #1a1a3b;
+    --text-color: #e0e0ff;
+    --secondary-text-color: #a0a0c0;
+    --button-success: #4169e1;
+    --button-danger: #e63964;
+}
+
+body[data-theme="pink"] {
+    --bg-color: #2a1a2a;
+    --main-color: #FFC0CB;
+    --accent-color: #ff69b4;
+    --card-bg: #3a2b3a;
+    --border-color: #4a3c4a;
+    --text-color: #fff0f5;
+    --secondary-text-color: #d8b0d8;
+    --button-success: #ff1493;
+    --button-danger: #e63964;
+}
+
+body[data-theme="silver"] {
+    --bg-color: #202020;
+    --main-color: #C0C0C0;
+    --accent-color: #a0a0a0;
+    --card-bg: #2e2e2e;
+    --border-color: #3b3b3b;
+    --text-color: #f0f0f0;
+    --secondary-text-color: #b8b8b8;
+    --button-success: #dcdcdc;
+    --button-danger: #e63964;
+}
+
+body[data-theme="skyblue"] {
+    --bg-color: #1a2a2e;
+    --main-color: #87CEEB;
+    --accent-color: #4682b4;
+    --card-bg: #2b3a3f;
+    --border-color: #3b4d52;
+    --text-color: #f0f8ff;
+    --secondary-text-color: #a0c0d0;
+    --button-success: #87cefa;
+    --button-danger: #e63964;
+}
+
+body[data-theme="violet"] {
+    --bg-color: #221a2e;
+    --main-color: #EE82EE;
+    --accent-color: #da70d6;
+    --card-bg: #322b3e;
+    --border-color: #423b4e;
+    --text-color: #fff0ff;
+    --secondary-text-color: #d0b0d0;
+    --button-success: #8a2be2;
+    --button-danger: #e63964;
+}
+
+body[data-theme="aqua"] {
+    --bg-color: #1a2e2e;
+    --main-color: #00FFFF;
+    --accent-color: #00ffff;
+    --card-bg: #2b3f3f;
+    --border-color: #3b4d4d;
+    --text-color: #e0ffff;
+    --secondary-text-color: #a0ffff;
+    --button-success: #00ced1;
+    --button-danger: #e63964;
+}
+
+body[data-theme="crimson"] {
+    --bg-color: #2e1a1a;
+    --main-color: #DC143C;
+    --accent-color: #ff6347;
+    --card-bg: #3d2b2b;
+    --border-color: #4d3a3a;
+    --text-color: #fff0f5;
+    --secondary-text-color: #d8c0b5;
+    --button-success: #ff4500;
+    --button-danger: #e63964;
+}
+
+body[data-theme="fuchsia"] {
+    --bg-color: #2e1a2e;
+    --main-color: #FF00FF;
+    --accent-color: #ff69b4;
+    --card-bg: #3d2b3d;
+    --border-color: #4d3a4d;
+    --text-color: #fff0f5;
+    --secondary-text-color: #d8b0d8;
+    --button-success: #ff1493;
+    --button-danger: #e63964;
+}
+
+body[data-theme="lime"] {
+    --bg-color: #1a2e1a;
+    --main-color: #00FF00;
+    --accent-color: #32cd32;
+    --card-bg: #2b3d2b;
+    --border-color: #3b4d3b;
+    --text-color: #f0fff0;
+    --secondary-text-color: #a0c0a0;
+    --button-success: #7fff00;
+    --button-danger: #e63964;
+}
+
+body[data-theme="orchid"] {
+    --bg-color: #2a1a2a;
+    --main-color: #DA70D6;
+    --accent-color: #ba55d3;
+    --card-bg: #3a2b3a;
+    --border-color: #4a3c4a;
+    --text-color: #fff0f5;
+    --secondary-text-color: #d8b0d8;
+    --button-success: #9932cc;
+    --button-danger: #e63964;
+}
+
+body[data-theme="peru"] {
+    --bg-color: #2a221a;
+    --main-color: #CD853F;
+    --accent-color: #d2691e;
+    --card-bg: #3a322b;
+    --border-color: #4a423b;
+    --text-color: #f5f5dc;
+    --secondary-text-color: #d2b48c;
+    --button-success: #b8860b;
+    --button-danger: #e63964;
+}
+
+body[data-theme="sienna"] {
+    --bg-color: #2a221a;
+    --main-color: #A0522D;
+    --accent-color: #8b4513;
+    --card-bg: #3a322b;
+    --border-color: #4a423b;
+    --text-color: #f5f5dc;
+    --secondary-text-color: #d2b48c;
+    --button-success: #b8860b;
+    --button-danger: #e63964;
+}
+
+body[data-theme="springgreen"] {
+    --bg-color: #1a2a1a;
+    --main-color: #00FF7F;
+    --accent-color: #32cd32;
+    --card-bg: #2a3a2a;
+    --border-color: #3b4a3b;
+    --text-color: #f0fff0;
+    --secondary-text-color: #a0c0a0;
+    --button-success: #7fff00;
+    --button-danger: #e63964;
+}
+
+body[data-theme="tomato"] {
+    --bg-color: #2e1a1a;
+    --main-color: #FF6347;
+    --accent-color: #ff4500;
+    --card-bg: #3d2b2b;
+    --border-color: #4d3a3a;
+    --text-color: #fff0f5;
+    --secondary-text-color: #d8c0b5;
+    --button-success: #ff7f50;
+    --button-danger: #e63964;
+}
+
+body[data-theme="turquoise"] {
+    --bg-color: #1a2a2e;
+    --main-color: #40E0D0;
+    --accent-color: #48d1cc;
+    --card-bg: #2b3a3f;
+    --border-color: #3b4d52;
+    --text-color: #f0f8ff;
+    --secondary-text-color: #a0c0d0;
+    --button-success: #00ced1;
+    --button-danger: #e63964;
+}
+
+body[data-theme="aquamarine"] {
+    --bg-color: #1a2a2e;
+    --main-color: #7FFFD4;
+    --accent-color: #40e0d0;
+    --card-bg: #2b3a3f;
+    --border-color: #3b4d52;
+    --text-color: #f0f8ff;
+    --secondary-text-color: #a0c0d0;
+    --button-success: #00ced1;
+    --button-danger: #e63964;
+}
+
+body[data-theme="chartreuse"] {
+    --bg-color: #1a2a1a;
+    --main-color: #7FFF00;
+    --accent-color: #9acd32;
+    --card-bg: #2a3a2a;
+    --border-color: #3b4a3b;
+    --text-color: #f0fff0;
+    --secondary-text-color: #a0c0a0;
+    --button-success: #00ff7f;
+    --button-danger: #e63964;
+}
+
+body[data-theme="chocolate"] {
+    --bg-color: #2a221a;
+    --main-color: #D2691E;
+    --accent-color: #cd853f;
+    --card-bg: #3a322b;
+    --border-color: #4a423b;
+    --text-color: #f5f5dc;
+    --secondary-text-color: #d2b48c;
+    --button-success: #b8860b;
+    --button-danger: #e63964;
+}
+
+body[data-theme="cornflowerblue"] {
+    --bg-color: #1a2a2e;
+    --main-color: #6495ED;
+    --accent-color: #4682b4;
+    --card-bg: #2b3a3f;
+    --border-color: #3b4d52;
+    --text-color: #f0f8ff;
+    --secondary-text-color: #a0c0d0;
+    --button-success: #4169e1;
+    --button-danger: #e63964;
+}
+
+body[data-theme="darkmagenta"] {
+    --bg-color: #1a0e1a;
+    --main-color: #8B008B;
+    --accent-color: #9932cc;
+    --card-bg: #2a1e2a;
+    --border-color: #3b2b3b;
+    --text-color: #f0e6f8;
+    --secondary-text-color: #bfa1d8;
+    --button-success: #8a2be2;
+    --button-danger: #e63964;
+}
+
+body[data-theme="firebrick"] {
+    --bg-color: #2e1a1a;
+    --main-color: #B22222;
+    --accent-color: #800000;
+    --card-bg: #3d2b2b;
+    --border-color: #4d3a3a;
+    --text-color: #fff0f5;
+    --secondary-text-color: #d8c0b5;
+    --button-success: #c62828;
+    --button-danger: #e63964;
+}
+
+body[data-theme="hotpink"] {
+    --bg-color: #2a1a2e;
+    --main-color: #FF69B4;
+    --accent-color: #ff1493;
+    --card-bg: #3a2b3a;
+    --border-color: #4a3c4a;
+    --text-color: #fff0f5;
+    --secondary-text-color: #d8b0d8;
+    --button-success: #ff007f;
+    --button-danger: #e63964;
+}
+
+body[data-theme="indigo"] {
+    --bg-color: #0e0e1e;
+    --main-color: #4B0082;
+    --accent-color: #6a0572;
+    --card-bg: #1e1e2d;
+    --border-color: #2b2b3b;
+    --text-color: #e6e6fa;
+    --secondary-text-color: #a0a0c0;
+    --button-success: #8a2be2;
+    --button-danger: #e63964;
+}
+
+body[data-theme="lavender"] {
+    --bg-color: #2a2a2e;
+    --main-color: #E6E6FA;
+    --accent-color: #b0c4de;
+    --card-bg: #3a3a3f;
+    --border-color: #4a4a52;
+    --text-color: #000;
+    --secondary-text-color: #666;
+    --button-success: #9370db;
+    --button-danger: #e63964;
+}
+
+body[data-theme="limegreen"] {
+    --bg-color: #1a2a1a;
+    --main-color: #32CD32;
+    --accent-color: #00ff7f;
+    --card-bg: #2a3a2a;
+    --border-color: #3b4a3b;
+    --text-color: #f0fff0;
+    --secondary-text-color: #a0c0a0;
+    --button-success: #7fff00;
+    --button-danger: #e63964;
+}
+
+body[data-theme="mediumseagreen"] {
+    --bg-color: #1a2a1a;
+    --main-color: #3CB371;
+    --accent-color: #2e8b57;
+    --card-bg: #2a3a2a;
+    --border-color: #3b4a3b;
+    --text-color: #f0fff0;
+    --secondary-text-color: #a0c0a0;
+    --button-success: #20b2aa;
+    --button-danger: #e63964;
+}
+
+body[data-theme="midnightblue"] {
+    --bg-color: #0c0c16;
+    --main-color: #191970;
+    --accent-color: #4169e1;
+    --card-bg: #19192c;
+    --border-color: #2b2b3b;
+    --text-color: #e0e0ff;
+    --secondary-text-color: #a0a0c0;
+    --button-success: #4682b4;
+    --button-danger: #e63964;
+}
+
+body[data-theme="paleturquoise"] {
+    --bg-color: #2a2e2e;
+    --main-color: #AFEEEE;
+    --accent-color: #40e0d0;
+    --card-bg: #3a3f3f;
+    --border-color: #4a4d4d;
+    --text-color: #000;
+    --secondary-text-color: #666;
+    --button-success: #00ced1;
+    --button-danger: #e63964;
+}
+
+body[data-theme="rosybrown"] {
+    --bg-color: #2a2a2a;
+    --main-color: #BC8F8F;
+    --accent-color: #cd853f;
+    --card-bg: #3a3a3a;
+    --border-color: #4a4a4a;
+    --text-color: #d8c0b5;
+    --secondary-text-color: #a0a0a0;
+    --button-success: #8b4513;
+    --button-danger: #e63964;
+}
+
+body[data-theme="saddlebrown"] {
+    --bg-color: #2a221a;
+    --main-color: #8B4513;
+    --accent-color: #a0522d;
+    --card-bg: #3a322b;
+    --border-color: #4a423b;
+    --text-color: #f5f5dc;
+    --secondary-text-color: #d2b48c;
+    --button-success: #cd853f;
+    --button-danger: #e63964;
+}
+
+body[data-theme="seagreen"] {
+    --bg-color: #1a2a1a;
+    --main-color: #2E8B57;
+    --accent-color: #3cb371;
+    --card-bg: #2a3a2a;
+    --border-color: #3b4a3b;
+    --text-color: #f0fff0;
+    --secondary-text-color: #a0c0a0;
+    --button-success: #20b2aa;
+    --button-danger: #e63964;
+}
+
+body[data-theme="steelblue"] {
+    --bg-color: #1a2a2e;
+    --main-color: #4682B4;
+    --accent-color: #6a95ed;
+    --card-bg: #2b3a3f;
+    --border-color: #3b4d52;
+    --text-color: #f0f8ff;
+    --secondary-text-color: #a0c0d0;
+    --button-success: #4169e1;
+    --button-danger: #e63964;
+}

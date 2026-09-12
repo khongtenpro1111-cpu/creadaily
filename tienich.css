@@ -1,0 +1,7 @@
+/* ==================== CÁC KIỂU CHO TRANG TIỆN ÍCH ==================== */
+/* Các kiểu chung được kế thừa từ index.css */
+
+/* Loại bỏ hiệu ứng đổi màu trên trang này */
+header.header-container h1 {
+    animation: none;
+}

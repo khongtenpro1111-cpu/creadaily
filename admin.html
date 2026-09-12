@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Quản Trị Admin</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+        .admin-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        .admin-container h1 {
+            color: var(--main-color);
+            text-align: center;
+        }
+        .admin-section {
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+        .admin-section h2 {
+            color: var(--accent-color);
+        }
+        .challenge-item, .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--bg-color);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .challenge-item p, .user-item p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .challenge-item .actions, .user-item .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .delete-btn, .edit-btn, .logout-btn {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .delete-btn {
+            background-color: var(--button-danger);
+            color: white;
+        }
+        .edit-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        #admin-logout {
+            display: block;
+            margin: 20px auto 0;
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Trang Quản Trị</h1>
+        <div class="admin-section">
+            <h2>Quản lý Đề xuất Thử thách</h2>
+            <div id="admin-challenges-container">
+                </div>
+        </div>
+        <div class="admin-section">
+            <h2>Quản lý Người dùng</h2>
+            <div id="admin-users-container">
+                </div>
+        </div>
+        <button id="admin-logout" class="auth-btn">Đăng xuất Admin</button>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Kiểm tra xem người dùng có phải là admin không
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser !== 'admin') {
+                window.location.href = 'index.html'; // Chuyển hướng nếu không phải admin
+            }
+
+            const adminChallengesContainer = document.getElementById('admin-challenges-container');
+            const adminUsersContainer = document.getElementById('admin-users-container');
+            const adminLogoutBtn = document.getElementById('admin-logout');
+
+            function renderAdminChallenges() {
+                const proposedChallenges = JSON.parse(localStorage.getItem('proposedChallenges')) || [];
+                adminChallengesContainer.innerHTML = '';
+                proposedChallenges.forEach(challenge => {
+                    const challengeItem = document.createElement('div');
+                    challengeItem.classList.add('challenge-item');
+                    challengeItem.innerHTML = `
+                        <p>${challenge.text} (votes: ${challenge.votes}) - bởi: ${challenge.author}</p>
+                        <div class="actions">
+                            <button class="delete-btn" data-id="${challenge.id}">Xóa</button>
+                        </div>
+                    `;
+                    adminChallengesContainer.appendChild(challengeItem);
+                });
+                // Thêm sự kiện xóa
+                document.querySelectorAll('#admin-challenges-container .delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const idToDelete = parseInt(e.currentTarget.dataset.id);
+                        if (confirm("Bạn có chắc chắn muốn xóa thử thách này không?")) {
+                            let proposedChallenges = JSON.parse(localStorage.getItem('proposedChallenges')) || [];
+                            const challengeIndex = proposedChallenges.findIndex(c => c.id === idToDelete);
+                            if (challengeIndex !== -1) {
+                                proposedChallenges.splice(challengeIndex, 1);
+                                localStorage.setItem('proposedChallenges', JSON.stringify(proposedChallenges));
+                                renderAdminChallenges();
+                                alert("Thử thách đã được xóa.");
+                            }
+                        }
+                    });
+                });
+            }
+
+            function renderAdminUsers() {
+                const users = JSON.parse(localStorage.getItem('users')) || {};
+                adminUsersContainer.innerHTML = '';
+                for (const username in users) {
+                    if (username === 'admin') continue; // Không hiển thị admin trong danh sách
+                    const user = users[username];
+                    const userItem = document.createElement('div');
+                    userItem.classList.add('user-item');
+                    userItem.innerHTML = `
+                        <p>${user.name} (@${user.username}) - Điểm: ${user.points}</p>
+                        <div class="actions">
+                            <button class="delete-btn" data-username="${user.username}">Xóa</button>
+                        </div>
+                    `;
+                    adminUsersContainer.appendChild(userItem);
+                }
+                // Thêm sự kiện xóa
+                document.querySelectorAll('#admin-users-container .delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const usernameToDelete = e.currentTarget.dataset.username;
+                        if (confirm(`Bạn có chắc chắn muốn xóa người dùng ${usernameToDelete} không?`)) {
+                            let users = JSON.parse(localStorage.getItem('users')) || {};
+                            delete users[usernameToDelete];
+                            localStorage.setItem('users', JSON.stringify(users));
+                            renderAdminUsers();
+                            alert(`Người dùng ${usernameToDelete} đã bị xóa.`);
+                        }
+                    });
+                });
+            }
+
+            if (adminLogoutBtn) {
+                adminLogoutBtn.addEventListener('click', () => {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'index.html';
+                });
+            }
+
+            renderAdminChallenges();
+            renderAdminUsers();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2666 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công Cụ Đánh Nhịp Nhạc Cao Cấp Pro Suite (Pro Metronome Online)</title>
+    <link rel="icon" type="image/png" href="img/logo/favicon-round.png">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Flash Overlay for Visual Metronome */
+        #flash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: inset 0 0 100px rgba(247, 37, 133, 0);
+            transition: box-shadow 0.05s ease-out;
+        }
+
+        #flash-overlay.flashing {
+            box-shadow: inset 0 0 120px rgba(247, 37, 133, 0.7);
+        }
+
+        .metronome-container {
+            max-width: 900px;
+            margin: 0 auto 50px;
+            padding: 40px 35px;
+            background: var(--card-bg) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius-lg, 24px) !important;
+            border: 1px solid var(--card-border) !important;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.45) !important;
+        }
+
+        .metronome-header-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Displays */
+        .bpm-display-wrapper {
+            text-align: center;
+            margin: 20px 0 25px;
+            position: relative;
+        }
+
+        .bpm-value {
+            font-size: 5.8rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+            text-shadow: 0 0 30px rgba(247, 37, 133, 0.5);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: transform 0.1s ease;
+        }
+
+        .bpm-unit {
+            font-size: 1.15rem;
+            color: var(--secondary-text-color);
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-top: 6px;
+        }
+
+        .tempo-name-badge {
+            display: inline-block;
+            padding: 7px 22px;
+            background: rgba(79, 70, 229, 0.2);
+            border: 1px solid rgba(79, 70, 229, 0.4);
+            color: #818cf8;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        /* Practice Counter Stats Header Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 20px;
+            background: rgba(11, 15, 25, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 14px 24px;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            color: var(--secondary-text-color);
+            flex-wrap: wrap;
+        }
+
+        .stats-item strong {
+            color: #fff;
+            font-size: 1.05rem;
+        }
+
+        /* BPM Slider & Steppers */
+        .bpm-controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 30px 0 25px;
+            flex-wrap: wrap;
+        }
+
+        .step-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-btn:hover {
+            background: var(--accent-color);
+            color: #fff;
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .step-btn:active {
+            transform: translateY(0);
+        }
+
+        .bpm-slider-container {
+            flex: 1;
+            min-width: 220px;
+            max-width: 380px;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+        }
+
+        .bpm-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.15);
+            outline: none;
+            transition: background 0.3s;
+        }
+
+        .bpm-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--main-color);
+            cursor: pointer;
+            box-shadow: 0 0 14px var(--main-color);
+            transition: transform 0.1s ease;
+        }
+
+        .bpm-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .tap-tempo-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #f72585, #7209b7);
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(247, 37, 133, 0.3);
+            transition: all 0.2s ease;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tap-tempo-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(247, 37, 133, 0.5);
+        }
+
+        .tap-tempo-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Presets Pills */
+        .tempo-presets {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .preset-pill {
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.88rem;
+            color: var(--secondary-text-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .preset-pill:hover {
+            background: rgba(247, 37, 133, 0.15);
+            border-color: var(--main-color);
+            color: #fff;
+        }
+
+        .preset-pill.active {
+            background: linear-gradient(135deg, var(--main-color), #7209b7) !important;
+            border-color: var(--main-color) !important;
+            color: #fff !important;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(247, 37, 133, 0.4);
+        }
+
+        /* Visualizer Card */
+        .visualizer-card {
+            background: rgba(11, 15, 25, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 25px 20px;
+            margin-bottom: 35px;
+            text-align: center;
+            position: relative;
+        }
+
+        .pendulum-track {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            position: relative;
+            margin: 15px 0 25px;
+            overflow: hidden;
+        }
+
+        .pendulum-dot {
+            width: 24px;
+            height: 24px;
+            background: var(--main-color);
+            border-radius: 50%;
+            position: absolute;
+            top: -6px;
+            left: 0;
+            box-shadow: 0 0 15px var(--main-color);
+            transform: translateX(-50%);
+            transition: left 0.05s linear;
+        }
+
+        .beat-dots-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            min-height: 75px;
+        }
+
+        .beat-dot {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s ease;
+        }
+
+        .beat-dot .beat-num {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1;
+        }
+
+        .beat-dot .beat-type {
+            font-size: 0.65rem;
+            color: var(--secondary-text-color);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .beat-dot.accent-strong {
+            border-color: var(--main-color);
+            background: rgba(247, 37, 133, 0.2);
+        }
+
+        .beat-dot.accent-normal {
+            border-color: var(--accent-color);
+            background: rgba(79, 70, 229, 0.2);
+        }
+
+        .beat-dot.accent-mute {
+            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.02);
+            opacity: 0.4;
+        }
+
+        .beat-dot.active {
+            transform: scale(1.2);
+            box-shadow: 0 0 25px currentColor;
+        }
+
+        .beat-dot.accent-strong.active {
+            background: var(--main-color);
+            box-shadow: 0 0 35px var(--main-color);
+        }
+
+        .beat-dot.accent-normal.active {
+            background: var(--accent-color);
+            box-shadow: 0 0 35px var(--accent-color);
+        }
+
+        /* Controls Panel */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .control-group {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 18px 20px;
+            border-radius: 16px;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--secondary-text-color);
+            margin-bottom: 12px;
+        }
+
+        .control-select, .control-input {
+            width: 100%;
+            max-width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            outline: none;
+            box-sizing: border-box;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .control-select option {
+            background: #0f172a;
+            color: #f8fafc;
+            max-width: 100%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 480px) {
+            .control-select, .control-input {
+                padding: 10px 12px;
+                font-size: 0.88rem;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .control-select option {
+                font-size: 0.8rem;
+                max-width: 250px !important;
+            }
+            .control-group {
+                overflow: hidden;
+            }
+        }
+
+        .control-select:focus, .control-input:focus {
+            border-color: var(--main-color);
+        }
+
+        /* Big Play Button Controls Bar */
+        .main-play-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin: 35px 0 45px;
+            padding: 22px;
+            background: rgba(11, 15, 25, 0.4);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .play-btn {
+            width: 92px;
+            height: 92px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--main-color), #4338ca);
+            color: #fff;
+            font-size: 2.3rem;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(247, 37, 133, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(247, 37, 133, 0.6);
+        }
+
+        .play-btn:active {
+            transform: scale(0.95);
+        }
+
+        .play-btn.playing {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.5);
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+
+        .quick-action-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-color);
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .quick-action-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--main-color);
+            transform: scale(1.08);
+        }
+
+        .quick-action-btn.active {
+            background: rgba(247, 37, 133, 0.2);
+            border-color: var(--main-color);
+            color: var(--main-color);
+        }
+
+        /* Advanced Features Wrapper & Tabs */
+        .advanced-section-wrapper {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.12);
+        }
+
+        .advanced-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--secondary-text-color);
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .advanced-tabs-nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            color: var(--secondary-text-color);
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(247, 37, 133, 0.25), rgba(79, 70, 229, 0.25));
+            border-color: var(--main-color);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(247, 37, 133, 0.25);
+        }
+
+        .tab-content-panel {
+            display: none;
+            background: rgba(11, 15, 25, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 28px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-content-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Toggle Switches */
+        .switch-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .switch-row:last-child {
+            border-bottom: none;
+        }
+
+        .switch-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .switch-sublabel {
+            font-size: 0.8rem;
+            color: var(--secondary-text-color);
+            margin-top: 2px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.15);
+            transition: .3s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--main-color);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Pitch Tuner Buttons */
+        .tuner-pitch-grid {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .pitch-note-btn {
+            padding: 9px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--secondary-text-color);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pitch-note-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .pitch-note-btn.active {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6) !important;
+            border-color: #ec4899 !important;
+            color: #ffffff !important;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.45) !important;
+            transform: scale(1.05);
+        }
+
+        /* Song Presets & Setlist Cards */
+        .preset-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .song-preset-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .song-preset-item:hover {
+            border-color: var(--accent-color);
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        .song-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .song-details {
+            font-size: 0.8rem;
+            color: var(--secondary-text-color);
+            margin-top: 3px;
+        }
+
+        .preset-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .preset-act-btn {
+            background: none;
+            border: none;
+            color: var(--secondary-text-color);
+            cursor: pointer;
+            padding: 6px;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            transition: color 0.2s;
+        }
+
+        .preset-act-btn:hover {
+            color: var(--main-color);
+        }
+
+        /* Pitch Tuner & Virtual Piano Keyboard */
+        .piano-keys-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 3px;
+            width: 100%;
+            max-width: 100%;
+            margin: 20px auto 10px;
+            padding: 10px 0 15px;
+            overflow: visible;
+            box-sizing: border-box;
+        }
+
+        .piano-key {
+            flex: 1 1 0;
+            min-width: 0;
+            height: 125px;
+            background: linear-gradient(to bottom, #ffffff 0%, #e2e8f0 100%);
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+            border-radius: 0 0 6px 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 8px;
+            font-weight: 800;
+            font-size: 0.72rem;
+            line-height: 1.1;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .piano-key.black-key {
+            position: absolute;
+            top: 10px;
+            height: 75px;
+            background: linear-gradient(to bottom, #334155 0%, #0f172a 100%);
+            color: #f8fafc;
+            z-index: 5;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+            border-radius: 0 0 5px 5px;
+            font-size: 0.65rem;
+            padding-bottom: 6px;
+            border: 1px solid #1e293b;
+        }
+
+        /* Specific positions for black keys relative to 8 white keys with 3px gap */
+        .piano-key[data-note="C#4"] { left: calc((100% - 21px) / 8 * 1 + 3px - 3.5%); width: 7%; }
+        .piano-key[data-note="D#4"] { left: calc((100% - 21px) / 8 * 2 + 6px - 3.5%); width: 7%; }
+        .piano-key[data-note="F#4"] { left: calc((100% - 21px) / 8 * 4 + 12px - 3.5%); width: 7%; }
+        .piano-key[data-note="G#4"] { left: calc((100% - 21px) / 8 * 5 + 15px - 3.5%); width: 7%; }
+        .piano-key[data-note="A#4"] { left: calc((100% - 21px) / 8 * 6 + 18px - 3.5%); width: 7%; }
+
+        @media (max-width: 480px) {
+            .piano-keys-wrapper {
+                gap: 2px;
+            }
+
+            .piano-key {
+                height: 110px;
+                font-size: 0.65rem;
+                padding-bottom: 6px;
+                border-radius: 0 0 5px 5px;
+            }
+
+            .piano-key .freq-sub {
+                display: none !important;
+            }
+
+            .piano-key.black-key {
+                height: 65px;
+                font-size: 0.58rem;
+                padding-bottom: 4px;
+            }
+
+            .piano-key[data-note="C#4"] { left: calc((100% - 14px) / 8 * 1 + 2px - 3.8%); width: 7.6%; }
+            .piano-key[data-note="D#4"] { left: calc((100% - 14px) / 8 * 2 + 4px - 3.8%); width: 7.6%; }
+            .piano-key[data-note="F#4"] { left: calc((100% - 14px) / 8 * 4 + 8px - 3.8%); width: 7.6%; }
+            .piano-key[data-note="G#4"] { left: calc((100% - 14px) / 8 * 5 + 10px - 3.8%); width: 7.6%; }
+            .piano-key[data-note="A#4"] { left: calc((100% - 14px) / 8 * 6 + 12px - 3.8%); width: 7.6%; }
+        }
+
+        .piano-key:active, .piano-key.active {
+            background: var(--main-color) !important;
+            color: #fff !important;
+            transform: translateY(4px);
+            box-shadow: 0 0 20px var(--main-color);
+        }
+
+        /* Audio Recorder UI */
+        .recorder-box {
+            background: rgba(11, 15, 25, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .record-btn {
+            padding: 12px 28px;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .record-btn.recording {
+            animation: pulseGlow 1s infinite alternate;
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+        }
+
+        /* Tempo Guide Cards Grid (Desktop & Mobile) */
+        .reference-card {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 30px;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg, 24px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .tempo-grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .tempo-item-card {
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px 20px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .tempo-item-card:hover {
+            border-color: var(--main-color);
+            background: rgba(247, 37, 133, 0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(247, 37, 133, 0.18);
+        }
+
+        .tempo-item-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .tempo-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .tempo-bpm-pill {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #818cf8;
+            background: rgba(79, 70, 229, 0.2);
+            border: 1px solid rgba(79, 70, 229, 0.4);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .tempo-item-desc {
+            font-size: 0.88rem;
+            color: var(--secondary-text-color);
+            line-height: 1.45;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .tempo-item-desc i {
+            color: var(--main-color);
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
+        /* Custom Modal Dialog Styling */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .custom-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-modal-card {
+            background: rgba(22, 30, 49, 0.95);
+            border: 1px solid rgba(247, 37, 133, 0.3);
+            border-radius: var(--radius-lg, 20px);
+            width: 100%;
+            max-width: 440px;
+            padding: 28px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(247, 37, 133, 0.25);
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .custom-modal-overlay.active .custom-modal-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .custom-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 14px;
+        }
+
+        .custom-modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .custom-modal-header h3 i {
+            color: var(--main-color);
+        }
+
+        .custom-modal-close-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: var(--secondary-text-color);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .custom-modal-close-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .custom-modal-body {
+            margin-bottom: 25px;
+        }
+
+        .custom-modal-body p {
+            color: var(--secondary-text-color);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .custom-modal-input-wrapper {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .custom-modal-input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--main-color);
+            font-size: 1.2rem;
+        }
+
+        .custom-modal-input {
+            width: 100%;
+            padding: 14px 14px 14px 48px;
+            background: rgba(11, 15, 25, 0.8);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            outline: none;
+            transition: all 0.25s ease;
+            box-sizing: border-box;
+        }
+
+        .custom-modal-input:focus {
+            border-color: var(--main-color);
+            box-shadow: 0 0 18px rgba(247, 37, 133, 0.35);
+        }
+
+        .custom-modal-suggestions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .custom-suggestion-chip {
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .custom-suggestion-chip:hover {
+            background: rgba(79, 70, 229, 0.25);
+            border-color: var(--accent-color);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .custom-modal-error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .custom-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .custom-modal-btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .custom-modal-btn.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-color);
+        }
+
+        .custom-modal-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .custom-modal-btn.primary {
+            background: linear-gradient(135deg, var(--main-color), #4338ca);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(247, 37, 133, 0.4);
+        }
+
+        .custom-modal-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(247, 37, 133, 0.6);
+        }
+
+        @media (max-width: 650px) {
+            .metronome-container {
+                padding: 22px 16px !important;
+            }
+            .controls-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .bpm-value {
+                font-size: 4.2rem;
+            }
+            .beat-dot {
+                width: 44px;
+                height: 44px;
+            }
+            .beat-dot .beat-num {
+                font-size: 1rem;
+            }
+            .play-btn {
+                width: 78px;
+                height: 78px;
+                font-size: 1.9rem;
+            }
+            .stats-bar {
+                font-size: 0.82rem;
+                gap: 10px;
+                padding: 10px 14px;
+                justify-content: space-between;
+            }
+            .advanced-tabs-nav {
+                gap: 8px;
+            }
+            .tab-btn {
+                padding: 9px 14px;
+                font-size: 0.82rem;
+            }
+
+            .reference-card {
+                padding: 22px 16px !important;
+            }
+
+            .tempo-grid-cards {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .piano-key {
+                width: 36px;
+                height: 110px;
+            }
+            .piano-key.black-key {
+                width: 26px;
+                height: 70px;
+                margin: 0 -13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="flash-overlay"></div>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <header class="header-inspiration" style="padding: 3rem 1rem; text-align: center;">
+        <h1><i class="fas fa-drum" style="color: var(--main-color); margin-right: 10px;"></i>Máy Đánh Nhịp Chuyên Nghiệp Pro Suite</h1>
+        <p>Bộ công cụ đánh nhịp cao cấp toàn diện: Huấn luyện viên Tempo, Đa nhịp Polyrhythm, Nhún Swing, Đàn Piano & Ghi âm</p>
+    </header>
+
+    <main style="padding: 1rem;">
+        <div class="metronome-container">
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stats-item"><i class="fas fa-stopwatch" style="color: var(--main-color);"></i> Thời gian tập: <strong id="stat-time">00:00</strong></div>
+                <div class="stats-item"><i class="fas fa-hashtag" style="color: #818cf8;"></i> Ô nhịp đã đánh: <strong id="stat-bars">0</strong></div>
+                <div class="stats-item"><i class="fas fa-hourglass-half" style="color: #fca311;"></i> Tự dừng sau: <strong id="stat-autostop">Tắt</strong></div>
+            </div>
+
+            <!-- BPM Display Section -->
+            <div class="metronome-header-info">
+                <div class="bpm-display-wrapper">
+                    <div id="bpm-val" class="bpm-value">120</div>
+                    <div class="bpm-unit">BPM (NHỊP / PHÚT)</div>
+                    <div id="tempo-badge" class="tempo-name-badge">Allegro (Nhanh - Năng động)</div>
+                </div>
+
+                <!-- Slider & Controls -->
+                <div class="bpm-controls-row">
+                    <button class="step-btn" id="btn-minus-5" title="-5 BPM">-5</button>
+                    <button class="step-btn" id="btn-minus-1" title="-1 BPM">-1</button>
+                    
+                    <div class="bpm-slider-container">
+                        <input type="range" id="bpm-range" class="bpm-slider" min="30" max="250" value="120">
+                    </div>
+
+                    <button class="step-btn" id="btn-plus-1" title="+1 BPM">+1</button>
+                    <button class="step-btn" id="btn-plus-5" title="+5 BPM">+5</button>
+
+                    <button id="tap-btn" class="tap-tempo-btn" title="Chạm theo nhịp nhạc để tính BPM"><i class="fas fa-fingerprint"></i> TAP TEMPO</button>
+                </div>
+
+                <!-- Presets -->
+                <div class="tempo-presets">
+                    <button class="preset-pill" data-bpm="50">Largo (50)</button>
+                    <button class="preset-pill" data-bpm="66">Adagio (66)</button>
+                    <button class="preset-pill" data-bpm="84">Andante (84)</button>
+                    <button class="preset-pill" data-bpm="108">Moderato (108)</button>
+                    <button class="preset-pill active" data-bpm="120">Allegro (120)</button>
+                    <button class="preset-pill" data-bpm="160">Vivace (160)</button>
+                    <button class="preset-pill" data-bpm="184">Presto (184)</button>
+                </div>
+            </div>
+
+            <!-- Visualizer Card -->
+            <div class="visualizer-card">
+                <div class="pendulum-track">
+                    <div id="pendulum-dot" class="pendulum-dot"></div>
+                </div>
+
+                <div id="beat-dots" class="beat-dots-container">
+                    <!-- Dynamic Beat Dots inserted here -->
+                </div>
+                <div style="font-size: 0.8rem; color: var(--secondary-text-color); margin-top: 12px;">
+                    <i class="fas fa-info-circle"></i> Nhấp vào phách để chuyển: <strong>Mạnh (Hồng)</strong> &rarr; <strong>Vừa (Xanh)</strong> &rarr; <strong>Tắt tiếng</strong>
+                </div>
+            </div>
+
+            <!-- Controls Grid (Clean 2x2 Layout) -->
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label><i class="fas fa-music"></i> Loại Nhịp (Time Signature)</label>
+                    <select id="time-sig-select" class="control-select">
+                        <option value="2/4">2/4 (Hành khúc / Pop)</option>
+                        <option value="3/4">3/4 (Valse / Nhịp 3)</option>
+                        <option value="4/4" selected>4/4 (Nhịp Phổ Biến)</option>
+                        <option value="6/8">6/8 (Slow Rock / Trữ tình)</option>
+                        <option value="5/4">5/4 (Phức hợp 5/4)</option>
+                        <option value="7/8">7/8 (Phức hợp 7/8)</option>
+                        <option value="custom">Tùy chỉnh...</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label><i class="fas fa-layer-group"></i> Chia Phách (Subdivision)</label>
+                    <select id="subdivision-select" class="control-select">
+                        <option value="1">♩ Nốt Đơn (1/1)</option>
+                        <option value="2">♫ Nốt Móc Đơn (1/2)</option>
+                        <option value="3">🎵 Nốt Ba (Triplets)</option>
+                        <option value="4">♬ Nốt Móc Kép (1/4)</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label><i class="fas fa-volume-high"></i> Âm Thanh Máy Nhịp (14 Loại Âm)</label>
+                    <select id="sound-voice-select" class="control-select">
+                        <option value="digital" selected>1. Digital Click (Tiếng Tách Điện Tử)</option>
+                        <option value="woodblock">2. Woodblock (Mõ Gỗ Tự Nhiên)</option>
+                        <option value="beep">3. Synth Beep (Tiếng Bíp Cao Tần)</option>
+                        <option value="cowbell">4. Cowbell (Chuông Đẩy Kim Loại)</option>
+                        <option value="drumkit">5. Kick & Snare (Trống Cơ Acoustic)</option>
+                        <option value="clap">6. Handclap (Vỗ Tay Sân Sấu)</option>
+                        <option value="marimba">7. Marimba (Đàn Gõ Gỗ Trầm)</option>
+                        <option value="rimshot">8. Rimshot (Gõ Vành Trống Snare)</option>
+                        <option value="triangle">9. Triangle (Tam Giác Âm Tinh Khiết)</option>
+                        <option value="hihat">10. Hi-Hat Closed (Lá Cạn Trống Chuyển Nhịp)</option>
+                        <option value="bongo">11. Bongo Drum (Trống Bongo Latino)</option>
+                        <option value="shaker">12. Egg Shaker (Hạt Gõ Cát Nhẹ)</option>
+                        <option value="clave">13. Cuban Clave (Thanh Gõ Nhịp Salsa)</option>
+                        <option value="laser">14. Retro Laser (Âm Arcade 8-Bit)</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label><i class="fas fa-sliders"></i> Âm Lượng (<span id="volume-val">80%</span>)</label>
+                    <input type="range" id="volume-range" class="bpm-slider" min="0" max="100" value="80" style="margin-top: 8px;">
+                </div>
+            </div>
+
+            <!-- Big Play Button Controls Bar -->
+            <div class="main-play-wrapper">
+                <button id="mute-btn" class="quick-action-btn" title="Bật / Tắt Tiếng"><i class="fas fa-volume-up"></i></button>
+                <button id="play-btn" class="play-btn" title="Bắt đầu / Dừng Đánh Nhịp (Space)"><i class="fas fa-play"></i></button>
+                <button id="flash-toggle-btn" class="quick-action-btn" title="Bật / Tắt Nháy Đèn Màn Hình"><i class="fas fa-bolt"></i></button>
+            </div>
+
+            <!-- Advanced Features Wrapper (10 Pro Features Suite) -->
+            <div class="advanced-section-wrapper">
+                <div class="advanced-header">
+                    <i class="fas fa-sliders-h" style="color: var(--main-color);"></i>
+                    <span>TÍNH NĂNG NÂNG CAO PRO SUITE</span>
+                </div>
+
+                <div class="advanced-tabs-nav">
+                    <button class="tab-btn active" data-tab="tab-trainer"><i class="fas fa-chart-line"></i> Huấn Luyện Viên Tempo</button>
+                    <button class="tab-btn" data-tab="tab-rhythm"><i class="fas fa-bullseye"></i> Tập Giữ Nhịp (Gap Click)</button>
+                    <button class="tab-btn" data-tab="tab-poly"><i class="fas fa-layer-group"></i> Đa Nhịp Điệu (Polyrhythm)</button>
+                    <button class="tab-btn" data-tab="tab-swing"><i class="fas fa-wave-square"></i> Cảm Giác Nhún (Swing)</button>
+                    <button class="tab-btn" data-tab="tab-piano"><i class="fas fa-keyboard"></i> Đàn Piano & Tuner</button>
+                    <button class="tab-btn" data-tab="tab-record"><i class="fas fa-microphone"></i> Ghi Âm Bài Tập</button>
+                    <button class="tab-btn" data-tab="tab-presets"><i class="fas fa-bookmark"></i> Lưu Bài Hát (Presets)</button>
+                    <button class="tab-btn" data-tab="tab-setlist"><i class="fas fa-list-ol"></i> Danh Sách Bài Tập (Setlist)</button>
+                    <button class="tab-btn" data-tab="tab-tuner"><i class="fas fa-guitar"></i> Âm Chuẩn Chỉnh Dây</button>
+                    <button class="tab-btn" data-tab="tab-timer"><i class="fas fa-hourglass-start"></i> Hẹn Giờ Tập</button>
+                </div>
+
+                <!-- Tab 1: Tempo Trainer -->
+                <div id="tab-trainer" class="tab-content-panel active">
+                    <h4 style="margin-top:0; color: #fff;"><i class="fas fa-chart-line" style="color: var(--main-color); margin-right: 8px;"></i> Huấn Luyện Viên Tăng Tốc Độ (Tempo Trainer)</h4>
+                    <p style="font-size:0.88rem; color: var(--secondary-text-color);">Tự động tăng dần BPM sau một số ô nhịp nhất định giúp bạn rèn luyện phản xạ và tốc độ ngón tay.</p>
+                    
+                    <div class="switch-row" style="margin-top: 15px;">
+                        <div>
+                            <div class="switch-label">Kích hoạt Huấn Luyện Viên Tempo</div>
+                            <div class="switch-sublabel">Tự động tăng BPM khi đang chơi</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="trainer-toggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 18px;">
+                        <div>
+                            <label style="font-size: 0.85rem; color: var(--secondary-text-color); display: block; margin-bottom: 6px;">Tăng thêm (BPM):</label>
+                            <input type="number" id="trainer-step-bpm" class="control-input" value="2" min="1" max="20">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: var(--secondary-text-color); display: block; margin-bottom: 6px;">Sau mỗi (Số ô nhịp):</label>
+                            <input type="number" id="trainer-every-bars" class="control-input" value="4" min="1" max="64">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: var(--secondary-text-color); display: block; margin-bottom: 6px;">Tối đa (BPM giới hạn):</label>
+                            <input type="number" id="trainer-max-bpm" class="control-input" value="160" min="40" max="250">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Rhythm Trainer (Gap Click) -->
+                <div id="tab-rhythm" class="tab-content-panel">
+                    <h4 style="margin-top:0; color: #fff;"><i class="fas fa-bullseye" style="color: #818cf8; margin-right: 8px;"></i> Tập Giữ Nhịp Độc Lập (Gap Click)</h4>
+                    <p style="font-size:0.88rem; color: var(--secondary-text-color);">Tắt tiếng định kỳ một vài ô nhịp để kiểm tra xem bạn có giữ đúng nhịp khi không có âm thanh trợ giúp hay không.</p>
+
+                    <div class="switch-row" style="margin-top: 15px;">
+                        <div>
+                            <div class="switch-label">Kích hoạt Tập Giữ Nhịp (Gap Click)</div>
+                            <div class="switch-sublabel">Xen kẽ các ô nhịp có tiếng và im lặng</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="gap-toggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 18px;">
+                        <div>
+                            <label style="font-size: 0.85rem; color: var(--secondary-text-color); display: block; margin-bottom: 6px;">Số ô nhịp CÓ tiếng:</label>
+                            <input type="number" id="gap-play-bars" class="control-input" value="3" min="1" max="16">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: var(--secondary-text-color); display: block; margin-bottom: 6px;">Số ô nhịp TẮT tiếng:</label>
+                            <input type="number" id="gap-mute-bars" class="control-input" value="1" min="1" max="16">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Polyrhythm Generator (Feature #1 Mới) -->
+                <div id="tab-poly" class="tab-content-panel">
+                    <h4 style="margin-top:0; color: #fff;"><i class="fas fa-layer-group" style="color: #f72585; margin-right: 8px;"></i> Máy Nhịp Đa Nhịp Điệu (Polyrhythm Generator)</h4>
+                    <p style="font-size:0.88rem; color: var(--secondary-text-color);">Phát song song 2 tầng nhịp điệu độc lập (như 3:2, 4:3, 5:4) giúp các tay trống, pianist luyện độc lập tay.</p>
+
+                    <div class="switch-row" style="margin-top: 15px;">
+                        <div>
+                            <div class="switch-label">Kích hoạt Đa Nhịp Điệu (Polyrhythm)</div>
+                            <div class="switch-sublabel">Tầng nhịp phụ chèn song song với nhịp chính</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="poly-toggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 18px;">
+                        <div>
+                            <label style="font-size: 0.85rem; color: var(--secondary-text-color); display: block; margin-bottom: 6px;">Nhịp chính (Layer A):</label>
+                            <input type="number" id="poly-a-val" class="control-input" value="4" min="1" max="16" readonly>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: var(--secondary-text-color); display: block; margin-bottom: 6px;">Nhịp phụ (Layer B):</label>
+                            <input type="number" id="poly-b-val" class="control-input" value="3" min="1" max="16">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Swing & Human Groove (Feature #2 Mới) -->
+                <div id="tab-swing" class="tab-content-panel">
+                    <h4 style="margin-top:0; color: #fff;"><i class="fas fa-wave-square" style="color: #818cf8; margin-right: 8px;"></i> Cảm Giác Nhún Swing & Human Groove</h4>
+                    <p style="font-size:0.88rem; color: var(--secondary-text-color);">Tạo hiệu ứng nhún Jazz/Blues Swing hoặc mô phỏng nhịp đánh tự nhiên của con người thay vì máy móc.</p>
+
+                    <div style="max-width: 360px; margin-top: 18px;">
+                        <label style="font-size: 0.88rem; color: var(--secondary-text-color); display: block; margin-bottom: 8px;">Chế độ Swing / Humanize:</label>
+                        <select id="swing-mode-select" class="control-select">
+                            <option value="0" selected>Straight (Nhịp thẳng chuẩn 50%)</option>
+                            <option value="55">Light Swing (Nhún nhẹ 55%)</option>
+                            <option value="66">Heavy Triplet Swing (Nhún dồn Jazz 66%)</option>
+                            <option value="human">Humanize (Sai số ngẫu nhiên ngón tay ±8ms)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tab 5: Virtual Piano & Tuner (Feature #3 Mới) -->
+                <div id="tab-piano" class="tab-content-panel">
+                    <h4 style="margin-top:0; color: #fff;"><i class="fas fa-keyboard" style="color: #ec4899; margin-right: 8px;"></i> Đàn Piano Ảo & Tuner Phím</h4>
+                    <p style="font-size:0.88rem; color: var(--secondary-text-color);">Nhấp vào các phím đàn Piano để nghe âm thanh tần số chuẩn của từng nốt nhạc (C4 đến C5).</p>
+
+                    <div class="piano-keys-wrapper">
+                        <div class="piano-key" data-note="C4" data-freq="261.63">C4<span class="freq-sub" style="font-size: 0.65rem; display: block;">261Hz</span></div>
+                        <div class="piano-key black-key" data-note="C#4" data-freq="277.18">C#4</div>
+                        <div class="piano-key" data-note="D4" data-freq="293.66">D4</div>
+                        <div class="piano-key black-key" data-note="D#4" data-freq="311.13">D#4</div>
+                        <div class="piano-key" data-note="E4" data-freq="329.63">E4</div>
+                        <div class="piano-key" data-note="F4" data-freq="349.23">F4</div>
+                        <div class="piano-key black-key" data-note="F#4" data-freq="369.99">F#4</div>
+                        <div class="piano-key" data-note="G4" data-freq="392.00">G4</div>
+                        <div class="piano-key black-key" data-note="G#4" data-freq="415.30">G#4</div>
+                        <div class="piano-key" data-note="A4" data-freq="440.00">A4</div>
+                        <div class="piano-key black-key" data-note="A#4" data-freq="466.16">A#4</div>
+                        <div class="piano-key" data-note="B4" data-freq="493.88">B4</div>
+                        <div class="piano-key" data-note="C5" data-freq="523.25">C5</div>
+                    </div>
+                </div>
+
+                <!-- Tab 6: Audio Recorder (Feature #4 Mới) -->
+                <div id="tab-record" class="tab-content-panel">
+                    <h4 style="margin-top:0; color: #fff;"><i class="fas fa-microphone" style="color: #ef4444; margin-right: 8px;"></i> Ghi Âm & Kiểm Tra Đánh Đúng Nhịp</h4>
+                    <p style="font-size:0.88rem; color: var(--secondary-text-color);">Ghi âm lại tiếng đàn/hát của bạn khi máy nhịp đang chạy để phát lại nghe thử độ chính xác nhịp đập.</p>
+
+                    <div class="recorder-box">
+                        <button id="record-btn" class="record-btn"><i class="fas fa-microphone"></i> Bắt Đầu Ghi Âm</button>
+                        <div id="record-status" style="font-size: 0.9rem; color: var(--secondary-text-color); margin: 15px 0;">Sẵn sàng ghi âm bài tập...</div>
+                        <audio id="recorded-audio" controls style="display: none; margin: 10px auto 0; width: 100%; max-width: 400px;"></audio>
+                    </div>
+                </div>
+
+                <!-- Tab 7: Song Presets -->
+                <div id="tab-presets" class="tab-content-panel">
+                    <h4 style="margin-top:0; color: #fff;"><i class="fas fa-bookmark" style="color: #fca311; margin-right: 8px;"></i> Lưu & Nạp Cấu Hình Bài Hát</h4>
+                    <p style="font-size:0.88rem; color: var(--secondary-text-color);">Lưu lại các thông số BPM, loại nhịp của bài hát yêu thích để mở lại ngay lập tức.</p>
+
+                    <div style="display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap;">
+                        <input type="text" id="preset-name-input" class="control-input" style="flex:1; min-width: 200px;" placeholder="Nhập tên bài hát (VD: Canon in D)...">
+                        <button id="save-preset-btn" class="tap-tempo-btn" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="fas fa-plus"></i> Lưu Bài Hát</button>
+                    </div>
+
+                    <div id="preset-list" class="preset-list">
+                        <!-- Presets loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Tab 8: Setlist Auto-Play (Feature #5 Mới) -->
+                <div id="tab-setlist" class="tab-content-panel">
+                    <h4 style="margin-top:0; color: #fff;"><i class="fas fa-list-ol" style="color: #10b981; margin-right: 8px;"></i> Danh Sách Bài Tập Tự Động (Setlist Trainer)</h4>
+                    <p style="font-size:0.88rem; color: var(--secondary-text-color);">Tự động chuyển từ bài tập 1 $\rightarrow$ bài tập 2 $\rightarrow$ bài tập 3 theo chuỗi luyện tập chuyên nghiệp.</p>
+
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button id="run-setlist-btn" class="tap-tempo-btn" style="background: linear-gradient(135deg, #10b981, #047857);"><i class="fas fa-play"></i> Bắt Đầu Chạy Chuỗi Bài Tập Setlist</button>
+                    </div>
+                    <div id="setlist-status" style="font-size: 0.9rem; color: var(--secondary-text-color); margin-top: 12px;">Sẵn sàng chạy Setlist gồm các bài hát trong Presets...</div>
+                </div>
+
+                <!-- Tab 9: Tuner Pitch Generator -->
+                <div id="tab-tuner" class="tab-content-panel">
+                    <h4 style="margin-top:0; color: #fff;"><i class="fas fa-guitar" style="color: #ec4899; margin-right: 8px;"></i> Máy Phát Âm Chuẩn Chỉnh Dây (Tuner Tone Generator)</h4>
+                    <p style="font-size:0.88rem; color: var(--secondary-text-color);">Phát âm thanh tần số chuẩn (A=440Hz) hỗ trợ lên dây đàn Guitar, Violin, Ukulele hoặc luyện thanh giọng hát.</p>
+
+                    <div class="tuner-pitch-grid">
+                        <button class="pitch-note-btn" data-freq="329.63">E4 (Đàn Guitar dây 1)</button>
+                        <button class="pitch-note-btn" data-freq="246.94">B3 (Đàn Guitar dây 2)</button>
+                        <button class="pitch-note-btn" data-freq="196.00">G3 (Đàn Guitar dây 3)</button>
+                        <button class="pitch-note-btn" data-freq="146.83">D3 (Đàn Guitar dây 4)</button>
+                        <button class="pitch-note-btn" data-freq="110.00">A2 (Đàn Guitar dây 5)</button>
+                        <button class="pitch-note-btn" data-freq="82.41">E2 (Đàn Guitar dây 6)</button>
+                        <button class="pitch-note-btn active" data-freq="440.00">A4 (Chuẩn 440Hz)</button>
+                        <button class="pitch-note-btn" data-freq="261.63">C4 (Nốt Đô trung âm)</button>
+                    </div>
+
+                    <div style="display: flex; gap: 16px; align-items: center; margin-top: 18px; flex-wrap: wrap;">
+                        <button id="play-tuner-btn" class="tap-tempo-btn" style="background: linear-gradient(135deg, #4f46e5, #7c3aed);"><i class="fas fa-play"></i> Phát Âm Chuẩn</button>
+                        <span id="tuner-freq-display" style="color: var(--secondary-text-color); font-size: 0.95rem;">Tần số: <strong>440.00 Hz</strong></span>
+                    </div>
+                </div>
+
+                <!-- Tab 10: Practice Timer -->
+                <div id="tab-timer" class="tab-content-panel">
+                    <h4 style="margin-top:0; color: #fff;"><i class="fas fa-hourglass-start" style="color: #3b82f6; margin-right: 8px;"></i> Hẹn Giờ Tự Động Dừng Tập</h4>
+                    <p style="font-size:0.88rem; color: var(--secondary-text-color);">Đặt thời lượng cho buổi tập. Máy nhịp sẽ tự động dừng lại khi hết thời gian.</p>
+
+                    <div style="max-width: 320px; margin-top: 18px;">
+                        <label style="font-size: 0.88rem; color: var(--secondary-text-color); display: block; margin-bottom: 8px;">Thời gian hẹn dừng:</label>
+                        <select id="autostop-select" class="control-select">
+                            <option value="0" selected>Tắt (Không tự dừng)</option>
+                            <option value="300">5 Phút</option>
+                            <option value="600">10 Phút</option>
+                            <option value="900">15 Phút</option>
+                            <option value="1200">20 Phút</option>
+                            <option value="1800">30 Phút</option>
+                            <option value="3600">60 Phút</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tempo Reference Guide (Modern Cards Grid) -->
+        <div class="reference-card">
+            <h3><i class="fas fa-book-open" style="color: var(--accent-color); margin-right: 8px;"></i>Bảng Thuật Ngữ Tempo & Tốc Độ Nhạc</h3>
+            <p style="color: var(--secondary-text-color); font-size: 0.9rem;">Ý nghĩa các chỉ số BPM và thuật ngữ tiếng Ý chuẩn trong âm nhạc</p>
+
+            <div class="tempo-grid-cards">
+                <div class="tempo-item-card">
+                    <div class="tempo-item-top">
+                        <span class="tempo-title">Largo</span>
+                        <span class="tempo-bpm-pill">40 - 60 BPM</span>
+                    </div>
+                    <div class="tempo-item-desc"><i class="fas fa-music"></i> Rất chậm, trang nghiêm, thong thả</div>
+                </div>
+
+                <div class="tempo-item-card">
+                    <div class="tempo-item-top">
+                        <span class="tempo-title">Adagio</span>
+                        <span class="tempo-bpm-pill">66 - 76 BPM</span>
+                    </div>
+                    <div class="tempo-item-desc"><i class="fas fa-music"></i> Chậm rãi, thong dong, đĩnh đạc</div>
+                </div>
+
+                <div class="tempo-item-card">
+                    <div class="tempo-item-top">
+                        <span class="tempo-title">Andante</span>
+                        <span class="tempo-bpm-pill">76 - 108 BPM</span>
+                    </div>
+                    <div class="tempo-item-desc"><i class="fas fa-music"></i> Tốc độ bước đi tự nhiên, vừa phải</div>
+                </div>
+
+                <div class="tempo-item-card">
+                    <div class="tempo-item-top">
+                        <span class="tempo-title">Moderato</span>
+                        <span class="tempo-bpm-pill">108 - 120 BPM</span>
+                    </div>
+                    <div class="tempo-item-desc"><i class="fas fa-music"></i> Tốc độ trung bình, cân bằng</div>
+                </div>
+
+                <div class="tempo-item-card">
+                    <div class="tempo-item-top">
+                        <span class="tempo-title">Allegro</span>
+                        <span class="tempo-bpm-pill">120 - 156 BPM</span>
+                    </div>
+                    <div class="tempo-item-desc"><i class="fas fa-music"></i> Nhanh, tươi vui, năng động (Pop/Rock)</div>
+                </div>
+
+                <div class="tempo-item-card">
+                    <div class="tempo-item-top">
+                        <span class="tempo-title">Vivace</span>
+                        <span class="tempo-bpm-pill">156 - 176 BPM</span>
+                    </div>
+                    <div class="tempo-item-desc"><i class="fas fa-music"></i> Sôi nổi, nhanh nhẹn, đầy tràn sức sống</div>
+                </div>
+
+                <div class="tempo-item-card">
+                    <div class="tempo-item-top">
+                        <span class="tempo-title">Presto</span>
+                        <span class="tempo-bpm-pill">168 - 200 BPM</span>
+                    </div>
+                    <div class="tempo-item-desc"><i class="fas fa-music"></i> Rất nhanh, dồn dập, liên tục</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Custom Time Signature Modal Dialog -->
+    <div id="custom-sig-modal" class="custom-modal-overlay">
+        <div class="custom-modal-card">
+            <div class="custom-modal-header">
+                <h3><i class="fas fa-sliders-h"></i> Tùy Chỉnh Số Phách</h3>
+                <button id="modal-close-btn" class="custom-modal-close-btn" title="Đóng">&times;</button>
+            </div>
+            <div class="custom-modal-body">
+                <p>Nhập số phách trong 1 nhịp (từ 1 đến 16 phách):</p>
+                <div class="custom-modal-input-wrapper">
+                    <i class="fas fa-drum"></i>
+                    <input type="number" id="custom-beats-input" class="custom-modal-input" min="1" max="16" value="5" placeholder="Nhập từ 1-16">
+                </div>
+                <div id="modal-error" class="custom-modal-error">
+                    <i class="fas fa-exclamation-circle"></i> Vui lòng nhập số phách hợp lệ từ 1 đến 16.
+                </div>
+                
+                <div style="font-size: 0.8rem; color: var(--secondary-text-color); margin-top: 16px; margin-bottom: 8px;">Gợi ý phách phổ biến:</div>
+                <div class="custom-modal-suggestions">
+                    <span class="custom-suggestion-chip" data-val="5">5 phách (5/4)</span>
+                    <span class="custom-suggestion-chip" data-val="7">7 phách (7/4)</span>
+                    <span class="custom-suggestion-chip" data-val="9">9 phách (9/8)</span>
+                    <span class="custom-suggestion-chip" data-val="12">12 phách (12/8)</span>
+                </div>
+            </div>
+            <div class="custom-modal-footer">
+                <button id="modal-cancel-btn" class="custom-modal-btn secondary">Hủy Bỏ</button>
+                <button id="modal-confirm-btn" class="custom-modal-btn primary"><i class="fas fa-check"></i> Áp Dụng</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+    <div id="music-placeholder"></div>
+    <div id="modals-placeholder"></div>
+
+    <script src="layout.js"></script>
+    <script src="main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Web Audio API State
+            let audioCtx = null;
+            let isPlaying = false;
+            let isMuted = false;
+            let isFlashingEnabled = false;
+            let currentSubBeat = 0; // index of subdivision step
+            let beatsPerMeasure = 4;
+            let subDivision = 1; // 1: quarter, 2: 8th, 3: triplet, 4: 16th
+            let bpm = 120;
+            let volume = 0.8;
+            let soundVoice = 'digital';
+            let previousTimeSigVal = '4/4';
+            
+            // Scheduling logic
+            let lookahead = 25.0; // milliseconds
+            let scheduleAheadTime = 0.1; // seconds
+            let nextNoteTime = 0.0;
+            let timerID = null;
+
+            // Stats & Practice Counter
+            let totalBarsPlayed = 0;
+            let practiceTimeSeconds = 0;
+            let practiceTimerInterval = null;
+            let autoStopDuration = 0;
+
+            // Trainer & Gap Logic State
+            let barCounterInSession = 0;
+            let isGapMutedBar = false;
+
+            // Polyrhythm State
+            let polyBeats = 3;
+            let polySubBeat = 0;
+
+            // Swing Mode State
+            let swingMode = '0'; // 0, 55, 66, human
+
+            // Recorder State
+            let mediaRecorder = null;
+            let audioChunks = [];
+            let isRecording = false;
+
+            // Accent Map per beat (1: accent strong, 2: normal, 0: mute)
+            let accentMap = [1, 2, 2, 2];
+
+            // DOM Elements
+            const bpmVal = document.getElementById('bpm-val');
+            const bpmRange = document.getElementById('bpm-range');
+            const tempoBadge = document.getElementById('tempo-badge');
+            const playBtn = document.getElementById('play-btn');
+            const muteBtn = document.getElementById('mute-btn');
+            const flashToggleBtn = document.getElementById('flash-toggle-btn');
+            const flashOverlay = document.getElementById('flash-overlay');
+
+            const timeSigSelect = document.getElementById('time-sig-select');
+            const subdivisionSelect = document.getElementById('subdivision-select');
+            const soundVoiceSelect = document.getElementById('sound-voice-select');
+            const volumeRange = document.getElementById('volume-range');
+            const volumeVal = document.getElementById('volume-val');
+            const beatDotsContainer = document.getElementById('beat-dots');
+            const pendulumDot = document.getElementById('pendulum-dot');
+            const tapBtn = document.getElementById('tap-btn');
+
+            // Stats Elements
+            const statTime = document.getElementById('stat-time');
+            const statBars = document.getElementById('stat-bars');
+            const statAutostop = document.getElementById('stat-autostop');
+            const autostopSelect = document.getElementById('autostop-select');
+
+            // Modal Elements
+            const customSigModal = document.getElementById('custom-sig-modal');
+            const customBeatsInput = document.getElementById('custom-beats-input');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const modalCancelBtn = document.getElementById('modal-cancel-btn');
+            const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+            const modalError = document.getElementById('modal-error');
+            const suggestionChips = document.querySelectorAll('.custom-suggestion-chip');
+
+            // Advanced Trainer Elements
+            const trainerToggle = document.getElementById('trainer-toggle');
+            const trainerStepBpm = document.getElementById('trainer-step-bpm');
+            const trainerEveryBars = document.getElementById('trainer-every-bars');
+            const trainerMaxBpm = document.getElementById('trainer-max-bpm');
+
+            const gapToggle = document.getElementById('gap-toggle');
+            const gapPlayBars = document.getElementById('gap-play-bars');
+            const gapMuteBars = document.getElementById('gap-mute-bars');
+
+            // Polyrhythm & Swing Elements
+            const polyToggle = document.getElementById('poly-toggle');
+            const polyAVal = document.getElementById('poly-a-val');
+            const polyBVal = document.getElementById('poly-b-val');
+            const swingModeSelect = document.getElementById('swing-mode-select');
+
+            // Presets & Setlist Elements
+            const presetNameInput = document.getElementById('preset-name-input');
+            const savePresetBtn = document.getElementById('save-preset-btn');
+            const presetList = document.getElementById('preset-list');
+            const runSetlistBtn = document.getElementById('run-setlist-btn');
+            const setlistStatus = document.getElementById('setlist-status');
+
+            // Tuner & Piano Elements
+            const playTunerBtn = document.getElementById('play-tuner-btn');
+            const tunerFreqDisplay = document.getElementById('tuner-freq-display');
+            let tunerOsc = null;
+            let tunerGain = null;
+            let isTunerPlaying = false;
+            let currentTunerFreq = 440.00;
+
+            // Recorder Elements
+            const recordBtn = document.getElementById('record-btn');
+            const recordStatus = document.getElementById('record-status');
+            const recordedAudio = document.getElementById('recorded-audio');
+
+            // Default Song Presets
+            let songPresets = [
+                { name: 'Canon in D', bpm: 72, sig: '4/4', sub: 1, voice: 'digital' },
+                { name: 'Hành Khúc Thổ Nhĩ Kỳ', bpm: 130, sig: '2/4', sub: 2, voice: 'woodblock' },
+                { name: 'Shape of You', bpm: 96, sig: '4/4', sub: 1, voice: 'digital' },
+                { name: 'Hotel California', bpm: 75, sig: '4/4', sub: 1, voice: 'woodblock' },
+                { name: 'Despacito', bpm: 89, sig: '4/4', sub: 2, voice: 'cowbell' }
+            ];
+
+            // Load song presets from LocalStorage if available
+            const savedPresetsStr = localStorage.getItem('creadaily_metronome_presets');
+            if (savedPresetsStr) {
+                try {
+                    songPresets = JSON.parse(savedPresetsStr);
+                } catch(e) {}
+            }
+
+            // Auto Save & Restore Full State to/from localStorage
+            const SETTINGS_KEY = 'creadaily_metronome_saved_settings';
+
+            function saveSettings() {
+                const settings = {
+                    bpm: bpm,
+                    beatsPerMeasure: beatsPerMeasure,
+                    timeSigVal: timeSigSelect.value,
+                    subDivision: subDivision,
+                    soundVoice: soundVoice,
+                    volume: volume,
+                    accentMap: accentMap,
+                    trainer: {
+                        enabled: trainerToggle.checked,
+                        stepBpm: trainerStepBpm.value,
+                        everyBars: trainerEveryBars.value,
+                        maxBpm: trainerMaxBpm.value
+                    },
+                    gap: {
+                        enabled: gapToggle.checked,
+                        playBars: gapPlayBars.value,
+                        muteBars: gapMuteBars.value
+                    },
+                    poly: {
+                        enabled: polyToggle.checked,
+                        polyB: polyBVal.value
+                    },
+                    swing: swingModeSelect.value,
+                    autoStopDuration: autoStopDuration,
+                    isFlashingEnabled: isFlashingEnabled
+                };
+                localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+            }
+
+            function loadSettings() {
+                const savedStr = localStorage.getItem(SETTINGS_KEY);
+                if (!savedStr) return;
+
+                try {
+                    const s = JSON.parse(savedStr);
+                    if (s.bpm) bpm = s.bpm;
+                    if (s.beatsPerMeasure) beatsPerMeasure = s.beatsPerMeasure;
+                    if (s.accentMap && Array.isArray(s.accentMap)) accentMap = s.accentMap;
+                    
+                    if (s.timeSigVal) {
+                        timeSigSelect.value = s.timeSigVal;
+                        previousTimeSigVal = s.timeSigVal;
+                        if (s.timeSigVal === 'custom') {
+                            const customOpt = timeSigSelect.querySelector('option[value="custom"]');
+                            if (customOpt) customOpt.textContent = `Tùy chỉnh (${beatsPerMeasure} phách)`;
+                        }
+                    }
+
+                    if (s.subDivision) {
+                        subDivision = s.subDivision;
+                        subdivisionSelect.value = subDivision;
+                    }
+
+                    if (s.soundVoice) {
+                        soundVoice = s.soundVoice;
+                        soundVoiceSelect.value = soundVoice;
+                    }
+
+                    if (s.volume !== undefined) {
+                        volume = s.volume;
+                        const volPercent = Math.round(volume * 100);
+                        volumeRange.value = volPercent;
+                        volumeVal.textContent = `${volPercent}%`;
+                    }
+
+                    if (s.trainer) {
+                        trainerToggle.checked = !!s.trainer.enabled;
+                        if (s.trainer.stepBpm) trainerStepBpm.value = s.trainer.stepBpm;
+                        if (s.trainer.everyBars) trainerEveryBars.value = s.trainer.everyBars;
+                        if (s.trainer.maxBpm) trainerMaxBpm.value = s.trainer.maxBpm;
+                    }
+
+                    if (s.gap) {
+                        gapToggle.checked = !!s.gap.enabled;
+                        if (s.gap.playBars) gapPlayBars.value = s.gap.playBars;
+                        if (s.gap.muteBars) gapMuteBars.value = s.gap.muteBars;
+                    }
+
+                    if (s.poly) {
+                        polyToggle.checked = !!s.poly.enabled;
+                        if (s.poly.polyB) polyBVal.value = s.poly.polyB;
+                    }
+
+                    if (s.swing) {
+                        swingMode = s.swing;
+                        swingModeSelect.value = swingMode;
+                    }
+
+                    if (s.autoStopDuration !== undefined) {
+                        autoStopDuration = s.autoStopDuration;
+                        autostopSelect.value = autoStopDuration;
+                        const txt = autostopSelect.options[autostopSelect.selectedIndex]?.text || 'Tắt';
+                        statAutostop.textContent = autoStopDuration > 0 ? txt : 'Tắt';
+                    }
+
+                    if (s.isFlashingEnabled !== undefined) {
+                        isFlashingEnabled = !!s.isFlashingEnabled;
+                        if (isFlashingEnabled) flashToggleBtn.classList.add('active');
+                    }
+                } catch(e) {
+                    console.error('Không thể khôi phục cài đặt metronome:', e);
+                }
+            }
+
+            // Adapt sound dropdown option labels specifically for Mobile screens without affecting Desktop
+            function adaptMobileSelectLabels() {
+                const isMobile = window.innerWidth <= 768;
+                const shortLabels = {
+                    'digital': '1. Digital',
+                    'woodblock': '2. Mõ Gỗ',
+                    'beep': '3. Bíp',
+                    'cowbell': '4. Chuông',
+                    'drumkit': '5. Trống',
+                    'clap': '6. Vỗ Tay',
+                    'marimba': '7. Marimba',
+                    'rimshot': '8. Rimshot',
+                    'triangle': '9. Tam Giác',
+                    'hihat': '10. Hi-Hat',
+                    'bongo': '11. Bongo',
+                    'shaker': '12. Shaker',
+                    'clave': '13. Clave',
+                    'laser': '14. Laser'
+                };
+
+                const fullLabels = {
+                    'digital': '1. Digital Click (Tiếng Tách Điện Tử)',
+                    'woodblock': '2. Woodblock (Mõ Gỗ Tự Nhiên)',
+                    'beep': '3. Synth Beep (Tiếng Bíp Cao Tần)',
+                    'cowbell': '4. Cowbell (Chuông Đẩy Kim Loại)',
+                    'drumkit': '5. Kick & Snare (Trống Cơ Acoustic)',
+                    'clap': '6. Handclap (Vỗ Tay Sân Sấu)',
+                    'marimba': '7. Marimba (Đàn Gõ Gỗ Trầm)',
+                    'rimshot': '8. Rimshot (Gõ Vành Trống Snare)',
+                    'triangle': '9. Triangle (Tam Giác Âm Tinh Khiết)',
+                    'hihat': '10. Hi-Hat Closed (Lá Cạn Trống Chuyển Nhịp)',
+                    'bongo': '11. Bongo Drum (Trống Bongo Latino)',
+                    'shaker': '12. Egg Shaker (Hạt Gõ Cát Nhẹ)',
+                    'clave': '13. Cuban Clave (Thanh Gõ Nhịp Salsa)',
+                    'laser': '14. Retro Laser (Âm Arcade 8-Bit)'
+                };
+
+                Array.from(soundVoiceSelect.options).forEach(opt => {
+                    const val = opt.value;
+                    if (isMobile) {
+                        if (shortLabels[val]) opt.textContent = shortLabels[val];
+                    } else {
+                        if (fullLabels[val]) opt.textContent = fullLabels[val];
+                    }
+                });
+            }
+
+            // Call on load and window resize
+            adaptMobileSelectLabels();
+            window.addEventListener('resize', adaptMobileSelectLabels);
+
+            // Tempo Italian Names lookup
+            function getTempoName(bpmNum) {
+                if (bpmNum < 60) return "Largo (Chậm rãi, trang nghiêm)";
+                if (bpmNum < 76) return "Adagio (Chậm, thong dong)";
+                if (bpmNum < 108) return "Andante (Bước đi tự nhiên)";
+                if (bpmNum < 120) return "Moderato (Tốc độ vừa phải)";
+                if (bpmNum < 156) return "Allegro (Nhanh - Năng động)";
+                if (bpmNum < 176) return "Vivace (Sôi nổi, tươi vui)";
+                return "Presto (Rất nhanh, dồn dập)";
+            }
+
+            function updateBpmUI(newBpm) {
+                bpm = Math.min(Math.max(parseInt(newBpm), 30), 250);
+                bpmVal.textContent = bpm;
+                bpmRange.value = bpm;
+                tempoBadge.textContent = getTempoName(bpm);
+
+                document.querySelectorAll('.preset-pill').forEach(btn => {
+                    if (parseInt(btn.dataset.bpm) === bpm) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+
+                saveSettings();
+            }
+
+            // Init Audio Context on first interaction
+            function initAudioContext() {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+            }
+
+            // Play Click Sound using AudioContext synthesis
+            function scheduleNote(beatIndex, subIndex, time) {
+                if (!audioCtx) return;
+
+                const isMainBeat = (subIndex === 0);
+                const accentState = accentMap[beatIndex] || 2;
+
+                if (isGapMutedBar || isMuted || volume <= 0 || accentState === 0) {
+                    const drawTime = Math.max(0, (time - audioCtx.currentTime) * 1000);
+                    setTimeout(() => {
+                        updateVisuals(beatIndex, subIndex);
+                    }, drawTime);
+                    return;
+                }
+
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                let freq = 800;
+                let duration = 0.04;
+                let noteVolume = volume;
+
+                if (isMainBeat) {
+                    if (accentState === 1) {
+                        freq = 1200;
+                        noteVolume *= 1.2;
+                        duration = 0.06;
+                    } else {
+                        freq = 800;
+                        noteVolume *= 0.9;
+                    }
+                } else {
+                    freq = 600;
+                    noteVolume *= 0.5;
+                    duration = 0.025;
+                }
+
+                if (soundVoice === 'woodblock') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq * 0.7, time);
+                    osc.frequency.exponentialRampToValueAtTime(150, time + duration);
+                } else if (soundVoice === 'beep') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, time);
+                } else if (soundVoice === 'cowbell') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(freq * 0.8, time);
+                } else if (soundVoice === 'drumkit') {
+                    if (isMainBeat && accentState === 1) {
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(180, time);
+                        osc.frequency.exponentialRampToValueAtTime(40, time + duration);
+                        duration = 0.08;
+                    } else {
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(1500, time);
+                        duration = 0.02;
+                    }
+                } else if (soundVoice === 'clap') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(freq * 0.5, time);
+                    duration = 0.03;
+                } else if (soundVoice === 'marimba') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq * 0.5, time);
+                    osc.frequency.exponentialRampToValueAtTime(80, time + duration);
+                    duration = 0.06;
+                } else if (soundVoice === 'rimshot') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(1400, time);
+                    osc.frequency.exponentialRampToValueAtTime(300, time + 0.02);
+                    duration = 0.025;
+                } else if (soundVoice === 'triangle') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq * 2.2, time);
+                    duration = 0.09;
+                } else if (soundVoice === 'hihat') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(3500, time);
+                    osc.frequency.exponentialRampToValueAtTime(800, time + 0.015);
+                    duration = 0.015;
+                } else if (soundVoice === 'bongo') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(isMainBeat ? 450 : 320, time);
+                    osc.frequency.exponentialRampToValueAtTime(isMainBeat ? 200 : 120, time + duration);
+                    duration = 0.05;
+                } else if (soundVoice === 'shaker') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(2200, time);
+                    duration = 0.012;
+                } else if (soundVoice === 'clave') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(2400, time);
+                    duration = 0.03;
+                } else if (soundVoice === 'laser') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(1800, time);
+                    osc.frequency.exponentialRampToValueAtTime(100, time + 0.05);
+                    duration = 0.05;
+                } else {
+                    // Digital Click Default
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq * 1.2, time);
+                }
+
+                gainNode.gain.setValueAtTime(noteVolume, time);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, time + duration);
+
+                osc.start(time);
+                osc.stop(time + duration);
+
+                // Secondary Polyrhythm Layer Sound Playback
+                if (polyToggle.checked && isMainBeat) {
+                    polyBeats = parseInt(polyBVal.value) || 3;
+                    const polyOsc = audioCtx.createOscillator();
+                    const polyGain = audioCtx.createGain();
+                    polyOsc.connect(polyGain);
+                    polyGain.connect(audioCtx.destination);
+                    polyOsc.type = 'sine';
+                    polyOsc.frequency.setValueAtTime(1600, time);
+                    polyGain.gain.setValueAtTime(noteVolume * 0.6, time);
+                    polyGain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
+                    polyOsc.start(time);
+                    polyOsc.stop(time + 0.03);
+                }
+
+                const drawTime = Math.max(0, (time - audioCtx.currentTime) * 1000);
+                setTimeout(() => {
+                    updateVisuals(beatIndex, subIndex);
+                }, drawTime);
+            }
+
+            function nextNote() {
+                let secondsPerBeat = 60.0 / bpm;
+                let secondsPerSubBeat = secondsPerBeat / subDivision;
+
+                // Swing & Humanize timing adjust
+                if (subDivision === 2) {
+                    if (swingMode === '55') {
+                        if (currentSubBeat % 2 === 0) secondsPerSubBeat *= 1.1;
+                        else secondsPerSubBeat *= 0.9;
+                    } else if (swingMode === '66') {
+                        if (currentSubBeat % 2 === 0) secondsPerSubBeat *= 1.33;
+                        else secondsPerSubBeat *= 0.67;
+                    }
+                }
+                if (swingMode === 'human') {
+                    const drift = (Math.random() - 0.5) * 0.012; // +/- 6ms
+                    secondsPerSubBeat += drift;
+                }
+
+                nextNoteTime += secondsPerSubBeat;
+
+                currentSubBeat++;
+                const totalSubBeats = beatsPerMeasure * subDivision;
+                if (currentSubBeat >= totalSubBeats) {
+                    currentSubBeat = 0;
+                    onBarCompleted();
+                }
+            }
+
+            // Called when a full measure/bar completes
+            function onBarCompleted() {
+                totalBarsPlayed++;
+                barCounterInSession++;
+                statBars.textContent = totalBarsPlayed;
+
+                // 1. Tempo Trainer Logic
+                if (trainerToggle.checked) {
+                    const stepBpm = parseInt(trainerStepBpm.value) || 2;
+                    const everyBars = parseInt(trainerEveryBars.value) || 4;
+                    const maxBpm = parseInt(trainerMaxBpm.value) || 160;
+
+                    if (barCounterInSession % everyBars === 0 && bpm < maxBpm) {
+                        updateBpmUI(Math.min(bpm + stepBpm, maxBpm));
+                    }
+                }
+
+                // 2. Gap Click Logic
+                if (gapToggle.checked) {
+                    const playBars = parseInt(gapPlayBars.value) || 3;
+                    const muteBars = parseInt(gapMuteBars.value) || 1;
+                    const cycleTotal = playBars + muteBars;
+                    const posInCycle = (barCounterInSession - 1) % cycleTotal;
+
+                    isGapMutedBar = (posInCycle >= playBars);
+                } else {
+                    isGapMutedBar = false;
+                }
+            }
+
+            function scheduler() {
+                while (nextNoteTime < audioCtx.currentTime + scheduleAheadTime) {
+                    const currentBeatIndex = Math.floor(currentSubBeat / subDivision);
+                    const currentSubIndex = currentSubBeat % subDivision;
+                    scheduleNote(currentBeatIndex, currentSubIndex, nextNoteTime);
+                    nextNote();
+                }
+                timerID = setTimeout(scheduler, lookahead);
+            }
+
+            // Visual Updates
+            function updateVisuals(beatIndex, subIndex) {
+                if (!isPlaying) return;
+
+                // Update Beat Dots
+                const dots = beatDotsContainer.querySelectorAll('.beat-dot');
+                dots.forEach((dot, idx) => {
+                    if (idx === beatIndex && subIndex === 0) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+
+                // Update Pendulum Position
+                if (subIndex === 0) {
+                    const progress = beatIndex / Math.max(beatsPerMeasure - 1, 1);
+                    const leftPos = progress * 100;
+                    pendulumDot.style.left = `${leftPos}%`;
+
+                    if (beatIndex === 0 && isFlashingEnabled) {
+                        flashOverlay.classList.add('flashing');
+                        setTimeout(() => flashOverlay.classList.remove('flashing'), 100);
+                    }
+                }
+            }
+
+            function startMetronome() {
+                initAudioContext();
+                isPlaying = true;
+                currentSubBeat = 0;
+                barCounterInSession = 0;
+                isGapMutedBar = false;
+                nextNoteTime = audioCtx.currentTime + 0.05;
+                scheduler();
+
+                playBtn.classList.add('playing');
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+
+                practiceTimerInterval = setInterval(() => {
+                    practiceTimeSeconds++;
+                    const mins = Math.floor(practiceTimeSeconds / 60);
+                    const secs = practiceTimeSeconds % 60;
+                    statTime.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+                    if (autoStopDuration > 0 && practiceTimeSeconds >= autoStopDuration) {
+                        stopMetronome();
+                        alert(`Thời gian tập (${Math.floor(autoStopDuration / 60)} phút) đã kết thúc!`);
+                    }
+                }, 1000);
+            }
+
+            function stopMetronome() {
+                isPlaying = false;
+                clearTimeout(timerID);
+                clearInterval(practiceTimerInterval);
+
+                playBtn.classList.remove('playing');
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+
+                const dots = beatDotsContainer.querySelectorAll('.beat-dot');
+                dots.forEach(dot => dot.classList.remove('active'));
+                pendulumDot.style.left = '0%';
+            }
+
+            function togglePlay() {
+                if (isPlaying) {
+                    stopMetronome();
+                } else {
+                    startMetronome();
+                }
+            }
+
+            // Render Beat Dots UI
+            function renderBeatDots() {
+                beatDotsContainer.innerHTML = '';
+                if (accentMap.length !== beatsPerMeasure) {
+                    accentMap = Array.from({ length: beatsPerMeasure }, (_, i) => i === 0 ? 1 : 2);
+                }
+
+                for (let i = 0; i < beatsPerMeasure; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'beat-dot';
+                    
+                    const state = accentMap[i] || 2;
+                    if (state === 1) dot.classList.add('accent-strong');
+                    else if (state === 2) dot.classList.add('accent-normal');
+                    else dot.classList.add('accent-mute');
+
+                    const typeText = state === 1 ? 'Mạnh' : (state === 2 ? 'Vừa' : 'Tắt');
+
+                    dot.innerHTML = `
+                        <span class="beat-num">${i + 1}</span>
+                        <span class="beat-type">${typeText}</span>
+                    `;
+
+                    dot.addEventListener('click', () => {
+                        accentMap[i] = (accentMap[i] === 1) ? 2 : ((accentMap[i] === 2) ? 0 : 1);
+                        renderBeatDots();
+                        saveSettings();
+                    });
+
+                    beatDotsContainer.appendChild(dot);
+                }
+            }
+
+            // Custom Modal Dialog Handlers
+            function openCustomModal() {
+                customBeatsInput.value = beatsPerMeasure || 5;
+                modalError.style.display = 'none';
+                customSigModal.classList.add('active');
+                setTimeout(() => customBeatsInput.focus(), 100);
+            }
+
+            function closeCustomModal(applyChanges = false) {
+                if (!applyChanges) {
+                    timeSigSelect.value = previousTimeSigVal;
+                }
+                customSigModal.classList.remove('active');
+            }
+
+            function confirmCustomModal() {
+                const parsed = parseInt(customBeatsInput.value);
+                if (!isNaN(parsed) && parsed >= 1 && parsed <= 16) {
+                    beatsPerMeasure = parsed;
+                    polyAVal.value = parsed;
+                    previousTimeSigVal = 'custom';
+
+                    const customOpt = timeSigSelect.querySelector('option[value="custom"]');
+                    if (customOpt) {
+                        customOpt.textContent = `Tùy chỉnh (${parsed} phách)`;
+                    }
+
+                    accentMap = Array.from({ length: beatsPerMeasure }, (_, i) => i === 0 ? 1 : 2);
+                    renderBeatDots();
+                    saveSettings();
+                    closeCustomModal(true);
+                } else {
+                    modalError.style.display = 'flex';
+                }
+            }
+
+            modalCloseBtn.addEventListener('click', () => closeCustomModal(false));
+            modalCancelBtn.addEventListener('click', () => closeCustomModal(false));
+            modalConfirmBtn.addEventListener('click', confirmCustomModal);
+
+            customSigModal.addEventListener('click', (e) => {
+                if (e.target === customSigModal) {
+                    closeCustomModal(false);
+                }
+            });
+
+            customBeatsInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    confirmCustomModal();
+                } else if (e.key === 'Escape') {
+                    closeCustomModal(false);
+                }
+            });
+
+            suggestionChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    customBeatsInput.value = chip.dataset.val;
+                    modalError.style.display = 'none';
+                });
+            });
+
+            // Tabs Switcher Logic
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content-panel').forEach(p => p.classList.remove('active'));
+
+                    btn.classList.add('active');
+                    const targetId = btn.dataset.tab;
+                    const panel = document.getElementById(targetId);
+                    if (panel) panel.classList.add('active');
+                });
+            });
+
+            // Virtual Piano Keys Interactive Tone Synthesis (Feature #3)
+            function playPianoNote(freq) {
+                initAudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(volume * 0.6, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.8);
+            }
+
+            document.querySelectorAll('.piano-key').forEach(key => {
+                key.addEventListener('click', () => {
+                    document.querySelectorAll('.piano-key').forEach(k => k.classList.remove('active'));
+                    key.classList.add('active');
+                    const freq = parseFloat(key.dataset.freq);
+                    playPianoNote(freq);
+                    setTimeout(() => key.classList.remove('active'), 300);
+                });
+            });
+
+            // Audio Recorder Logic (Feature #4)
+            recordBtn.addEventListener('click', async () => {
+                if (isRecording) {
+                    if (mediaRecorder) mediaRecorder.stop();
+                    isRecording = false;
+                    recordBtn.classList.remove('recording');
+                    recordBtn.innerHTML = '<i class="fas fa-microphone"></i> Bắt Đầu Ghi Âm';
+                    recordStatus.textContent = 'Đã dừng ghi âm. Nghe lại file thu bên dưới:';
+                } else {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        audioChunks = [];
+                        mediaRecorder = new MediaRecorder(stream);
+                        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                        mediaRecorder.onstop = () => {
+                            const blob = new Blob(audioChunks, { type: 'audio/mp3' });
+                            recordedAudio.src = URL.createObjectURL(blob);
+                            recordedAudio.style.display = 'block';
+                        };
+                        mediaRecorder.start();
+                        isRecording = true;
+                        recordBtn.classList.add('recording');
+                        recordBtn.innerHTML = '<i class="fas fa-stop"></i> Dừng Ghi Âm...';
+                        recordStatus.textContent = '🔴 Đang ghi âm âm thanh thực tế... Hát/đàn theo nhịp!';
+                    } catch(err) {
+                        alert('Không thể truy cập Micro của bạn: ' + err.message);
+                    }
+                }
+            });
+
+            // Setlist Auto-Play Logic (Feature #5)
+            runSetlistBtn.addEventListener('click', () => {
+                if (songPresets.length === 0) {
+                    alert('Chưa có bài hát nào trong Presets!');
+                    return;
+                }
+
+                let currentIdx = 0;
+                setlistStatus.innerHTML = `🚀 Đang chạy bài ${currentIdx + 1}/${songPresets.length}: <strong>${songPresets[currentIdx].name}</strong>`;
+                
+                const item = songPresets[currentIdx];
+                updateBpmUI(item.bpm);
+                timeSigSelect.value = item.sig;
+                timeSigSelect.dispatchEvent(new Event('change'));
+
+                if (!isPlaying) startMetronome();
+            });
+
+            // Song Presets Management
+            function renderSongPresets() {
+                presetList.innerHTML = '';
+                songPresets.forEach((item, index) => {
+                    const presetEl = document.createElement('div');
+                    presetEl.className = 'song-preset-item';
+                    presetEl.innerHTML = `
+                        <div>
+                            <div class="song-title">${item.name}</div>
+                            <div class="song-details">${item.bpm} BPM | Nhịp ${item.sig}</div>
+                        </div>
+                        <div class="preset-actions">
+                            <button class="preset-act-btn load-preset" title="Nạp bài này"><i class="fas fa-play"></i></button>
+                            <button class="preset-act-btn del-preset" title="Xóa bài"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+
+                    presetEl.querySelector('.load-preset').addEventListener('click', () => {
+                        updateBpmUI(item.bpm);
+                        timeSigSelect.value = item.sig;
+                        timeSigSelect.dispatchEvent(new Event('change'));
+                        subdivisionSelect.value = item.sub;
+                        subdivisionSelect.dispatchEvent(new Event('change'));
+                        soundVoiceSelect.value = item.voice;
+                        soundVoiceSelect.dispatchEvent(new Event('change'));
+                    });
+
+                    presetEl.querySelector('.del-preset').addEventListener('click', () => {
+                        songPresets.splice(index, 1);
+                        localStorage.setItem('creadaily_metronome_presets', JSON.stringify(songPresets));
+                        renderSongPresets();
+                    });
+
+                    presetList.appendChild(presetEl);
+                });
+            }
+
+            savePresetBtn.addEventListener('click', () => {
+                const name = presetNameInput.value.trim();
+                if (!name) {
+                    alert('Vui lòng nhập tên bài hát!');
+                    return;
+                }
+                songPresets.push({
+                    name: name,
+                    bpm: bpm,
+                    sig: timeSigSelect.value,
+                    sub: subDivision,
+                    voice: soundVoice
+                });
+                localStorage.setItem('creadaily_metronome_presets', JSON.stringify(songPresets));
+                presetNameInput.value = '';
+                renderSongPresets();
+            });
+
+            // Tuner Pitch Generator Logic
+            document.querySelectorAll('.pitch-note-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.pitch-note-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTunerFreq = parseFloat(btn.dataset.freq);
+                    tunerFreqDisplay.innerHTML = `Tần số: <strong>${currentTunerFreq.toFixed(2)} Hz</strong>`;
+
+                    if (isTunerPlaying && tunerOsc) {
+                        tunerOsc.frequency.setValueAtTime(currentTunerFreq, audioCtx.currentTime);
+                    }
+                });
+            });
+
+            playTunerBtn.addEventListener('click', () => {
+                initAudioContext();
+                if (isTunerPlaying) {
+                    if (tunerOsc) tunerOsc.stop();
+                    isTunerPlaying = false;
+                    playTunerBtn.innerHTML = '<i class="fas fa-play"></i> Phát Âm Chuẩn';
+                    playTunerBtn.style.background = 'linear-gradient(135deg, #4f46e5, #7c3aed)';
+                } else {
+                    if (isPlaying) stopMetronome();
+
+                    tunerOsc = audioCtx.createOscillator();
+                    tunerGain = audioCtx.createGain();
+                    tunerOsc.type = 'sine';
+                    tunerOsc.frequency.setValueAtTime(currentTunerFreq, audioCtx.currentTime);
+
+                    tunerGain.gain.setValueAtTime(volume * 0.5, audioCtx.currentTime);
+                    tunerOsc.connect(tunerGain);
+                    tunerGain.connect(audioCtx.destination);
+
+                    tunerOsc.start();
+                    isTunerPlaying = true;
+                    playTunerBtn.innerHTML = '<i class="fas fa-stop"></i> Dừng Phát';
+                    playTunerBtn.style.background = 'linear-gradient(135deg, #ef4444, #b91c1c)';
+                }
+            });
+
+            // Mute & Flash Toggle Handlers
+            muteBtn.addEventListener('click', () => {
+                isMuted = !isMuted;
+                if (isMuted) {
+                    muteBtn.classList.add('active');
+                    muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                } else {
+                    muteBtn.classList.remove('active');
+                    muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                }
+                saveSettings();
+            });
+
+            flashToggleBtn.addEventListener('click', () => {
+                isFlashingEnabled = !isFlashingEnabled;
+                if (isFlashingEnabled) {
+                    flashToggleBtn.classList.add('active');
+                } else {
+                    flashToggleBtn.classList.remove('active');
+                }
+                saveSettings();
+            });
+
+            autostopSelect.addEventListener('change', (e) => {
+                autoStopDuration = parseInt(e.target.value) || 0;
+                const txt = e.target.options[e.target.selectedIndex].text;
+                statAutostop.textContent = autoStopDuration > 0 ? txt : 'Tắt';
+                saveSettings();
+            });
+
+            // Swing mode listener
+            swingModeSelect.addEventListener('change', (e) => {
+                swingMode = e.target.value;
+                saveSettings();
+            });
+
+            // Polyrhythm listener
+            polyToggle.addEventListener('change', saveSettings);
+            polyBVal.addEventListener('change', saveSettings);
+
+            // Inputs for Trainer & Gap Click change handlers to save state
+            [trainerToggle, trainerStepBpm, trainerEveryBars, trainerMaxBpm, gapToggle, gapPlayBars, gapMuteBars].forEach(el => {
+                el.addEventListener('change', saveSettings);
+            });
+
+            // Tap Tempo Logic
+            let tapTimes = [];
+            tapBtn.addEventListener('click', () => {
+                const now = performance.now();
+                tapTimes.push(now);
+
+                if (tapTimes.length > 5) tapTimes.shift();
+
+                if (tapTimes.length > 1) {
+                    let intervals = [];
+                    for (let i = 1; i < tapTimes.length; i++) {
+                        intervals.push(tapTimes[i] - tapTimes[i - 1]);
+                    }
+                    const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+                    const calculatedBpm = Math.round(60000 / avgInterval);
+                    if (calculatedBpm >= 30 && calculatedBpm <= 250) {
+                        updateBpmUI(calculatedBpm);
+                    }
+                }
+
+                clearTimeout(tapBtn.resetTimer);
+                tapBtn.resetTimer = setTimeout(() => { tapTimes = []; }, 2000);
+            });
+
+            // Event Listeners
+            playBtn.addEventListener('click', togglePlay);
+
+            bpmRange.addEventListener('input', (e) => {
+                updateBpmUI(e.target.value);
+            });
+
+            document.getElementById('btn-minus-5').addEventListener('click', () => updateBpmUI(bpm - 5));
+            document.getElementById('btn-minus-1').addEventListener('click', () => updateBpmUI(bpm - 1));
+            document.getElementById('btn-plus-1').addEventListener('click', () => updateBpmUI(bpm + 1));
+            document.getElementById('btn-plus-5').addEventListener('click', () => updateBpmUI(bpm + 5));
+
+            document.querySelectorAll('.preset-pill').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    updateBpmUI(btn.dataset.bpm);
+                });
+            });
+
+            timeSigSelect.addEventListener('change', (e) => {
+                const val = e.target.value;
+                if (val === 'custom') {
+                    openCustomModal();
+                } else {
+                    previousTimeSigVal = val;
+                    const parts = val.split('/');
+                    beatsPerMeasure = parseInt(parts[0]) || 4;
+                    polyAVal.value = beatsPerMeasure;
+                    accentMap = Array.from({ length: beatsPerMeasure }, (_, i) => i === 0 ? 1 : 2);
+                    renderBeatDots();
+                    saveSettings();
+                }
+            });
+
+            subdivisionSelect.addEventListener('change', (e) => {
+                subDivision = parseInt(e.target.value) || 1;
+                saveSettings();
+            });
+
+            soundVoiceSelect.addEventListener('change', (e) => {
+                soundVoice = e.target.value;
+                saveSettings();
+            });
+
+            volumeRange.addEventListener('input', (e) => {
+                volume = parseFloat(e.target.value) / 100;
+                volumeVal.textContent = `${e.target.value}%`;
+                if (isTunerPlaying && tunerGain) {
+                    tunerGain.gain.setValueAtTime(volume * 0.5, audioCtx.currentTime);
+                }
+                saveSettings();
+            });
+
+            // Keyboard Shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (customSigModal.classList.contains('active')) return;
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+                
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    togglePlay();
+                } else if (e.code === 'ArrowUp') {
+                    e.preventDefault();
+                    updateBpmUI(bpm + 1);
+                } else if (e.code === 'ArrowDown') {
+                    e.preventDefault();
+                    updateBpmUI(bpm - 1);
+                } else if (e.code === 'ArrowRight') {
+                    e.preventDefault();
+                    updateBpmUI(bpm + 5);
+                } else if (e.code === 'ArrowLeft') {
+                    e.preventDefault();
+                    updateBpmUI(bpm - 5);
+                } else if (e.key.toLowerCase() === 't') {
+                    tapBtn.click();
+                } else if (e.key.toLowerCase() === 'm') {
+                    muteBtn.click();
+                }
+            });
+
+            // Initial Setup: Load Saved State & Render UI
+            loadSettings();
+            renderBeatDots();
+            renderSongPresets();
+            updateBpmUI(bpm);
+        });
+    </script>
+</body>
+</html>

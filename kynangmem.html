@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh mục Kỹ năng mềm</title>
+ 
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="kynangmem.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <header class="header-skills">
+        <h1>Danh mục Kỹ năng mềm</h1>
+        <p>Phát triển bản thân và nâng cao kỹ năng để thành công!</p>
+    </header>
+    <main>
+        <section id="soft-skills-section" class="section-container">
+            <div id="soft-skills-category-container"></div>
+            <div id="soft-skills-list-container"></div>
+            <div id="soft-skills-content-container" class="soft-skills-content-detail" style="display: none;">
+                <button id="back-to-soft-skills-btn" class="back-btn">Quay lại danh sách</button>
+                <h3 id="soft-skills-title"></h3>
+                <div id="soft-skills-video"></div>
+                <div id="soft-skills-text"></div>
+            </div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const softSkillsListContainer = document.getElementById('soft-skills-list-container');
+            const softSkillsContentContainer = document.getElementById('soft-skills-content-container');
+            const softSkillsTitle = document.getElementById('soft-skills-title');
+            const softSkillsText = document.getElementById('soft-skills-text');
+            const backToSoftSkillsBtn = document.getElementById('back-to-soft-skills-btn');
+            const softSkillsCategoryContainer = document.getElementById('soft-skills-category-container');
+            const softSkillsVideo = document.getElementById('soft-skills-video');
+
+            const softSkills = [
+                {
+                    title: "Kỹ năng giao tiếp",
+                    category: "Cá nhân",
+                    content: "Kỹ năng giao tiếp hiệu quả là một trong những yếu tố quan trọng nhất để thành công trong cuộc sống và công việc. Nó giúp bạn truyền đạt ý tưởng, cảm xúc và thông tin một cách rõ ràng, chính xác. Để cải thiện kỹ năng này, bạn có thể tham gia các khóa học, luyện tập nói trước gương hoặc tham gia các câu lạc bộ diễn thuyết.",
+                    imageUrl: "img/kynangmem/ky nang giao tiep.png",
+                    videoUrl: "video/kỹ năng giao tiếp.mp4"
+                },
+                {
+                    title: "Kỹ năng làm việc nhóm",
+                    category: "Xã hội",
+                    content: "Trong một môi trường làm việc hiện đại, làm việc nhóm là kỹ năng không thể thiếu. Nó giúp bạn học hỏi từ người khác, chia sẻ kiến thức và cùng nhau đạt được mục tiêu chung. Để làm việc nhóm hiệu quả, bạn cần học cách lắng nghe, tôn trọng ý kiến của người khác và đóng góp tích cực vào công việc chung.",
+                    imageUrl: "img/kynangmem/ky-nang-lam-viec-nhom-6.webp",
+                    videoUrl: "video/kynanglmvcnhom.mp4"
+                },
+                {
+                    title: "Kỹ năng giải quyết vấn đề",
+                    category: "Tư duy",
+                    content: "Khi đối mặt với một vấn đề, việc tìm ra giải pháp nhanh chóng và hiệu quả là rất quan trọng. Kỹ năng giải quyết vấn đề giúp bạn phân tích, đánh giá và đưa ra các quyết định đúng đắn. Để cải thiện kỹ năng này, bạn có thể tham gia các trò chơi tư duy, giải các bài toán logic hoặc tham gia các khóa học về tư duy phản biện.",
+                    imageUrl: "img/kynangmem/ky-nang-giai-quyet-van-de-3.webp",
+                    videoUrl: "video/kn giải quyết vấn đề.mp4"
+                },
+                {
+                    title: "Kỹ năng lãnh đạo",
+                    category: "Cá nhân",
+                    content: "Lãnh đạo không chỉ là quản lý và chỉ đạo người khác, mà còn là truyền cảm hứng và tạo động lực cho họ. Kỹ năng lãnh đạo giúp bạn xây dựng một đội ngũ vững mạnh, định hướng mục tiêu và dẫn dắt mọi người đến thành công. Để phát triển kỹ năng này, bạn có thể tham gia các khóa học về quản lý, đọc sách về lãnh đạo hoặc tìm kiếm một người cố vấn.",
+                    imageUrl: "img/kynangmem/ky-nang-cua-nguoi-lanh-dao.webp",
+                    videoUrl: "video/kn lãnh đạo.mp4"
+                },
+                {
+                    title: "Kỹ năng quản lý thời gian",
+                    category: "Cá nhân",
+                    content: "Trong cuộc sống bận rộn, việc quản lý thời gian hiệu quả giúp bạn hoàn thành công việc một cách nhanh chóng và có thêm thời gian cho bản thân. Kỹ năng quản lý thời gian bao gồm việc lập kế hoạch, ưu tiên công việc và tránh xao nhãng. Để cải thiện kỹ năng này, bạn có thể sử dụng các ứng dụng quản lý công việc, lập danh sách việc cần làm hàng ngày hoặc áp dụng phương pháp Pomodoro.",
+                    imageUrl: "img/kynangmem/ky-nang-quan-ly-thoi-gian.webp",
+                    videoUrl: "video/kn qly tg.mp4"
+                },
+                {
+                    title: "Kỹ năng thuyết trình",
+                    category: "Xã hội",
+                    content: "Thuyết trình là một kỹ năng quan trọng giúp bạn truyền đạt ý tưởng một cách rõ ràng và thuyết phục. Kỹ năng này bao gồm việc chuẩn bị nội dung, thiết kế slide và trình bày tự tin. Để cải thiện kỹ năng này, bạn có thể luyện tập trước gương, nhờ bạn bè góp ý hoặc tham gia các buổi thuyết trình công khai.",
+                    imageUrl: "img/kynangmem/ky-nang-thuyet-trinh-la-gi.webp",
+                    videoUrl: "video/kn thuyết trình.mp4"
+                },
+                {
+                    title: "Kỹ năng tư duy phản biện",
+                    category: "Tư duy",
+                    content: "Tư duy phản biện giúp bạn đánh giá thông tin một cách khách quan, phân tích các lập luận và đưa ra kết luận logic. Kỹ năng này rất quan trọng trong việc đưa ra các quyết định đúng đắn và giải quyết các vấn đề phức tạp. Để cải thiện kỹ năng này, bạn có thể đọc nhiều sách, tham gia các buổi tranh luận hoặc luyện tập đặt câu hỏi.",
+                    imageUrl: "img/kynangmem/kn tu duy phan bien.webp",
+                    videoUrl: "video/kn tư duy phản biện.mp4"
+                },
+                {
+                    title: "Kỹ năng đàm phán",
+                    category: "Xã hội",
+                    content: "Đàm phán là một kỹ năng quan trọng giúp bạn đạt được mục tiêu trong các cuộc thương lượng. Kỹ năng này bao gồm việc lắng nghe, đưa ra lập luận thuyết phục và tìm kiếm giải pháp hai bên cùng có lợi. Để cải thiện kỹ năng này, bạn có thể tham gia các khóa học về đàm phán, luyện tập với bạn bè hoặc đọc sách về các chiến lược đàm phán.",
+                    imageUrl: "img/kynangmem/kn đàm phán.webp",
+                    videoUrl: "video/kn đàm phán.mp4"
+                }
+            ];
+            const softSkillsCategories = ["Tất cả", "Cá nhân", "Xã hội", "Tư duy"];
+
+            function renderSoftSkillsCategories() {
+                softSkillsCategoryContainer.innerHTML = '';
+                softSkillsCategories.forEach((category, index) => {
+                    const btn = document.createElement('button');
+                    btn.classList.add('category-btn');
+                    if (index === 0) {
+                        btn.classList.add('active');
+                    }
+                    btn.innerText = category;
+                    btn.dataset.category = category;
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        renderSoftSkills(category);
+                    });
+                    softSkillsCategoryContainer.appendChild(btn);
+                });
+            }
+
+            function renderSoftSkills(filterCategory = "Tất cả") {
+                softSkillsListContainer.innerHTML = '';
+                const filteredSkills = filterCategory === "Tất cả" ? softSkills : softSkills.filter(s => s.category === filterCategory);
+                
+                filteredSkills.forEach((skill, index) => {
+                    const skillElement = document.createElement('div');
+                    skillElement.classList.add('soft-skill-item');
+                    skillElement.dataset.index = softSkills.findIndex(s => s.title === skill.title);
+
+                    // Thêm hình ảnh thumbnail vào danh mục
+                    let thumbnailHtml = '';
+                    if (skill.imageUrl) {
+                        thumbnailHtml = `<img src="${skill.imageUrl}" alt="${skill.title}" class="soft-skill-thumbnail">`;
+                    }
+
+                    skillElement.innerHTML = `${thumbnailHtml}<h3>${skill.title}</h3><p>${skill.category}</p>`;
+                    softSkillsListContainer.appendChild(skillElement);
+                });
+
+                const skillItems = document.querySelectorAll('.soft-skill-item');
+                skillItems.forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const index = e.currentTarget.dataset.index;
+                        const skill = softSkills[index];
+                        softSkillsTitle.innerText = skill.title;
+                        softSkillsText.innerText = skill.content;
+                        
+                        softSkillsVideo.innerHTML = '';
+
+                        // Thêm video nếu có
+                        if (skill.videoUrl) {
+                            const videoIframe = document.createElement('iframe');
+                            videoIframe.src = skill.videoUrl;
+                            videoIframe.setAttribute('frameborder', '0');
+                            videoIframe.setAttribute('allowfullscreen', 'true');
+                            videoIframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                            videoIframe.classList.add('soft-skills-video-embed');
+                            softSkillsVideo.appendChild(videoIframe);
+                        }0
+
+                        softSkillsCategoryContainer.style.display = 'none';
+                        softSkillsListContainer.style.display = 'none';
+                        softSkillsContentContainer.style.display = 'block';
+                    });
+                });
+            }
+
+            backToSoftSkillsBtn.addEventListener('click', () => {
+                softSkillsCategoryContainer.style.display = 'flex';
+                softSkillsListContainer.style.display = 'grid';
+                softSkillsContentContainer.style.display = 'none';
+                softSkillsVideo.innerHTML = '';
+            });
+
+            renderSoftSkillsCategories();
+            renderSoftSkills();
+        });
+    </script>
+    <div id="footer-placeholder"></div>
+    <div id="music-placeholder"></div>
+    <div id="modals-placeholder"></div>
+
+    <script src="layout.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

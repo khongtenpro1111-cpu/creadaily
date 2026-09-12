@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Bắn Bong Bóng</title>
+    <link rel="stylesheet" href="banbongbong.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="hearts-container" id="hearts-container"></div>
+    <header>
+        <h1>Game Bắn Bong Bóng</h1>
+        <p>Di chuyển chuột để ngắm bắn, click để bắn!</p>
+    </header>
+
+    <main id="game-container">
+        <div id="game-area">
+            <div id="cannon"></div>
+        </div>
+        <div id="game-info">
+            <p>Điểm: <span id="score">0</span></p>
+            <p>Thời gian: <span id="time">60</span>s</p>
+            <p id="message">Nhấn Bắt đầu để chơi!</p>
+            <button id="start-btn">Bắt đầu</button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameArea = document.getElementById('game-area');
+            const cannon = document.getElementById('cannon');
+            const scoreDisplay = document.getElementById('score');
+            const timeDisplay = document.getElementById('time');
+            const messageEl = document.getElementById('message');
+            const startBtn = document.getElementById('start-btn');
+
+            let score = 0;
+            let timeLeft = 60;
+            let isGameOver = false;
+            let gameInterval;
+            let bubbleInterval;
+
+            const getRandomPosition = () => {
+                const gameAreaRect = gameArea.getBoundingClientRect();
+                const bubbleSize = 50;
+                const maxX = gameAreaRect.width - bubbleSize;
+                const randomX = Math.random() * maxX;
+                return { x: randomX };
+            };
+
+            const createBubble = () => {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                const { x } = getRandomPosition();
+                bubble.style.left = `${x}px`;
+                bubble.style.bottom = `-50px`;
+
+                gameArea.appendChild(bubble);
+
+                let bubblePosition = -50;
+                let bubbleSpeed = Math.random() * 5 + 2;
+
+                const moveBubble = () => {
+                    if (bubblePosition > gameArea.offsetHeight) {
+                        bubble.remove();
+                        return;
+                    }
+                    bubblePosition += bubbleSpeed;
+                    bubble.style.bottom = `${bubblePosition}px`;
+                    requestAnimationFrame(moveBubble);
+                };
+
+                moveBubble();
+
+                bubble.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    score++;
+                    scoreDisplay.textContent = score;
+                    bubble.remove();
+                });
+            };
+
+            const startGame = () => {
+                if (!isGameOver) {
+                    isGameOver = false;
+                    score = 0;
+                    timeLeft = 60;
+                    scoreDisplay.textContent = score;
+                    timeDisplay.textContent = timeLeft;
+                    messageEl.textContent = 'Bắt đầu bắn bong bóng!';
+                    startBtn.textContent = 'Chơi lại';
+                    gameArea.innerHTML = '<div id="cannon"></div>';
+                    
+                    const newCannon = document.getElementById('cannon');
+                    gameArea.addEventListener('mousemove', (e) => {
+                        const gameAreaRect = gameArea.getBoundingClientRect();
+                        const mouseX = e.clientX - gameAreaRect.left;
+                        newCannon.style.left = `${mouseX - 25}px`;
+                    });
+
+                    gameArea.addEventListener('click', (e) => {
+                        const bullet = document.createElement('div');
+                        bullet.classList.add('bullet');
+                        bullet.style.left = newCannon.style.left;
+                        bullet.style.bottom = '50px';
+                        gameArea.appendChild(bullet);
+
+                        let bulletPosition = 50;
+                        const moveBullet = () => {
+                            if (bulletPosition > gameArea.offsetHeight) {
+                                bullet.remove();
+                                return;
+                            }
+                            bulletPosition += 10;
+                            bullet.style.bottom = `${bulletPosition}px`;
+                            requestAnimationFrame(moveBullet);
+                        };
+
+                        moveBullet();
+                    });
+
+                    bubbleInterval = setInterval(createBubble, 1000);
+                    gameInterval = setInterval(() => {
+                        timeLeft--;
+                        timeDisplay.textContent = timeLeft;
+                        if (timeLeft <= 0) {
+                            endGame(true);
+                        }
+                    }, 1000);
+                }
+            };
+
+            const endGame = (isTimeUp = false) => {
+                isGameOver = true;
+                clearInterval(bubbleInterval);
+                clearInterval(gameInterval);
+                
+                if (isTimeUp) {
+                    messageEl.textContent = `Hết giờ! Điểm của anh: ${score}`;
+                }
+                startBtn.textContent = 'Chơi lại';
+            };
+
+            startBtn.addEventListener('click', () => {
+                startGame();
+            });
+        });
+
+        // JavaScript cho hiệu ứng trái tim rơi
+        document.addEventListener('DOMContentLoaded', () => {
+            const heartsContainer = document.getElementById('hearts-container');
+            const numHearts = 10;
+            const maxDuration = 15;
+
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                
+                heart.style.left = Math.random() * 100 + 'vw';
+                
+                const size = Math.random() * 15 + 8;
+                heart.style.width = size + 'px';
+                heart.style.height = size + 'px';
+
+                const colors = ['#ff7e5f', '#feb47b', '#ffc0cb', '#e0bbe4', '#957dad'];
+                heart.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                heart.style.animationDuration = Math.random() * maxDuration + 5 + 's';
+                heart.style.animationDelay = Math.random() * (maxDuration / 2) + 's';
+
+                heartsContainer.appendChild(heart);
+
+                heart.addEventListener('animationend', () => {
+                    heart.remove();
+                });
+            }
+
+            for (let i = 0; i < numHearts; i++) {
+                createHeart();
+            }
+
+            setInterval(createHeart, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+:root {
+    --bg-color: #12121e;
+    --main-color: #f72585; /* Hồng neon */
+    --accent-color: #4361ee; /* Xanh dương */
+    --card-bg: #1e1e2d;
+    --border-color: #2b2b3b;
+    --text-color: #f0f0f0;
+    --secondary-text-color: #a0a0a0;
+    --button-success: #52b788;
+    --button-danger: #e63964;
+    --snake-color: #52b788;
+    --food-color: #e63964;
+    --control-bg: #2b2b3b;
+    --control-hover: #4361ee;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.header-game {
+    background-color: var(--card-bg);
+    padding: 40px 20px 20px;
+    text-align: center;
+    border-bottom: 3px solid var(--accent-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    width: 100%;
+}
+
+.header-game h1 {
+    font-size: 2.5em;
+    text-shadow: 0 0 5px rgba(247, 37, 133, 0.5);
+    margin: 0;
+}
+
+.header-game p {
+    color: var(--secondary-text-color);
+    margin: 5px 0 0;
+}
+
+main {
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    border: 2px solid;
+    border-image: linear-gradient(45deg, var(--main-color), var(--accent-color)) 1;
+    max-width: 900px;
+    width: 90%;
+    margin: 30px auto;
+}
+
+#game-board {
+    border: 2px solid var(--border-color);
+    background-color: #1e1e2d;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* Cố định kích thước */
+    width: 400px; 
+    height: 400px;
+}
+
+#game-info {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+#score {
+    color: var(--main-color);
+    text-shadow: 0 0 5px rgba(247, 37, 133, 0.5);
+}
+
+#status {
+    color: var(--accent-color);
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+
+.game-btn {
+    background: linear-gradient(45deg, var(--button-success), #a2e88f);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.game-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), 0 0 15px var(--button-success);
+}
+
+/* Ẩn hiện hướng dẫn tùy thiết bị */
+.mobile-instruction, #mobile-controls {
+    display: none;
+}
+.desktop-instruction {
+    display: block;
+}
+
+/* Các kiểu cho di động */
+@media (max-width: 600px) {
+    .desktop-instruction {
+        display: none;
+    }
+    .mobile-instruction, #mobile-controls {
+        display: flex;
+    }
+    #game-board {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+    #mobile-controls {
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        margin-top: 20px;
+    }
+    .horizontal-controls {
+        display: flex;
+        gap: 20px;
+    }
+    .control-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 2em;
+        font-weight: bold;
+        color: var(--text-color);
+        background-color: var(--control-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .control-btn:hover {
+        background-color: var(--control-hover);
+        transform: scale(1.05);
+    }
+}

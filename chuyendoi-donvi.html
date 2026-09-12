@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuyển Đổi Đơn Vị</title>
+    <link rel="icon" type="image/png" href="img/logo/favicon-round.png">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+
+        h1, h2, h3, h4 {
+            font-weight: 600;
+        }
+
+        /* ==================== HIỆU ỨNG RIÊNG CHO CÔNG CỤ ==================== */
+        .converter-container {
+            max-width: 600px;
+            margin: 0 auto 50px;
+            padding: 35px 30px;
+            text-align: center;
+            background: var(--card-bg) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius-lg, 20px) !important;
+            border: 1px solid var(--card-border) !important;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .converter-input, .converter-select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+
+        .converter-input {
+            width: 120px;
+        }
+
+        .converter-select {
+            min-width: 100px;
+        }
+
+        .result-display {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--main-color);
+            margin-top: 15px;
+        }
+
+        /* ==================== MEDIA QUERIES (RESPONSIVE) ==================== */
+        @media (max-width: 768px) {
+            .converter-container {
+                padding: 20px;
+            }
+            .input-group {
+                flex-direction: column;
+            }
+            .converter-input, .converter-select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <header class="header-inspiration" style="padding: 3rem 1rem; text-align: center;">
+        <h1>Chuyển Đổi Đơn Vị</h1>
+        <p>Chuyển đổi nhanh chóng các đơn vị đo lường khác nhau</p>
+    </header>
+
+    <main style="padding: 2rem 1rem;">
+        <div class="converter-container">
+            <h2>Chuyển Đổi</h2>
+            <div class="input-group">
+                <select id="category-select" class="converter-select"></select>
+            </div>
+            <div class="input-group">
+                <input type="number" id="input-value" class="converter-input" placeholder="Nhập giá trị">
+                <select id="input-unit" class="converter-select"></select>
+                <span>thành</span>
+                <select id="output-unit" class="converter-select"></select>
+            </div>
+            
+            <h3>Kết quả:</h3>
+            <div id="result" class="result-display"></div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+    <div id="music-placeholder"></div>
+    <div id="modals-placeholder"></div>
+
+    <script src="layout.js"></script>
+    <script src="main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const categorySelect = document.getElementById('category-select');
+            const inputValueEl = document.getElementById('input-value');
+            const inputUnitEl = document.getElementById('input-unit');
+            const outputUnitEl = document.getElementById('output-unit');
+            const resultEl = document.getElementById('result');
+
+            const conversionData = {
+                'Chiều Dài': {
+                    'baseUnit': 'm',
+                    'units': {
+                        'mm': 0.001,
+                        'cm': 0.01,
+                        'dm': 0.1,
+                        'm': 1,
+                        'km': 1000,
+                        'in': 0.0254,
+                        'ft': 0.3048,
+                        'yd': 0.9144,
+                        'mi': 1609.34,
+                        ' hải lý': 1852,
+                        'Ångstrơm': 1e-10,
+                        'picomet': 1e-12,
+                        'nanomet': 1e-9,
+                        'micromet': 1e-6,
+                        'ly': 9.46e15
+                    }
+                },
+                'Khối Lượng': {
+                    'baseUnit': 'g',
+                    'units': {
+                        'mcg': 1e-6,
+                        'mg': 0.001,
+                        'g': 1,
+                        'kg': 1000,
+                        'tấn': 1e6,
+                        'oz': 28.3495,
+                        'lb': 453.592,
+                        'st': 6350.29,
+                        'quintal': 100000,
+                        'tạ': 100000,
+                        'yến': 10000,
+                        'phân': 3.75,
+                        'chỉ': 3.75,
+                        'lạng': 37.5,
+                        'cân': 600
+                    }
+                },
+                'Thể Tích': {
+                    'baseUnit': 'l',
+                    'units': {
+                        'ml': 0.001,
+                        'cl': 0.01,
+                        'dl': 0.1,
+                        'l': 1,
+                        'm3': 1000,
+                        'tsp': 0.00492892,
+                        'tbsp': 0.0147868,
+                        'cup': 0.236588,
+                        'pt': 0.473176,
+                        'qt': 0.946353,
+                        'gal': 3.78541,
+                        'ft3': 28.3168,
+                        'in3': 0.016387
+                    }
+                },
+                'Nhiệt Độ': {
+                    'baseUnit': 'C',
+                    'units': {
+                        'C': {'toBase': v => v, 'fromBase': v => v},
+                        'F': {'toBase': v => (v - 32) / 1.8, 'fromBase': v => v * 1.8 + 32},
+                        'K': {'toBase': v => v - 273.15, 'fromBase': v => v + 273.15},
+                        'R': {'toBase': v => (v - 491.67) / 1.8, 'fromBase': v => v * 1.8 + 491.67}
+                    }
+                },
+                'Diện Tích': {
+                    'baseUnit': 'm2',
+                    'units': {
+                        'mm2': 1e-6,
+                        'cm2': 0.0001,
+                        'dm2': 0.01,
+                        'm2': 1,
+                        'km2': 1e6,
+                        'ha': 10000,
+                        'acre': 4046.86,
+                        'sq mi': 2.59e6,
+                        'mẫu': 3600,
+                        'sào': 360
+                    }
+                },
+                'Tốc Độ': {
+                    'baseUnit': 'm/s',
+                    'units': {
+                        'm/s': 1,
+                        'km/h': 0.277778,
+                        'ft/s': 0.3048,
+                        'mph': 0.44704,
+                        'knot': 0.514444,
+                        'mach': 343
+                    }
+                },
+                'Thời Gian': {
+                    'baseUnit': 's',
+                    'units': {
+                        'ns': 1e-9,
+                        'μs': 1e-6,
+                        'ms': 0.001,
+                        's': 1,
+                        'min': 60,
+                        'h': 3600,
+                        'd': 86400,
+                        ' tuần': 604800,
+                        ' tháng': 2.6298e6,
+                        ' năm': 3.15576e7,
+                        ' thập kỷ': 3.15576e8,
+                        ' thế kỷ': 3.15576e9
+                    }
+                },
+                'Tiền Tệ': {
+                    'baseUnit': 'VND',
+                    'units': {
+                        'VND': 1,
+                        'USD': 25000,
+                        'EUR': 27000,
+                        'GBP': 31000,
+                        'JPY': 160,
+                        'CNY': 3500,
+                        'KRW': 18,
+                        'AUD': 16000,
+                        'CAD': 18000
+                    }
+                },
+                'Dữ Liệu Máy Tính': {
+                    'baseUnit': 'B',
+                    'units': {
+                        'b': 0.125,
+                        'B': 1,
+                        'KB': 1024,
+                        'MB': 1048576,
+                        'GB': 1.074e9,
+                        'TB': 1.1e12,
+                        'PB': 1.126e15
+                    }
+                },
+                'Áp Suất': {
+                    'baseUnit': 'Pa',
+                    'units': {
+                        'Pa': 1,
+                        'kPa': 1000,
+                        'bar': 100000,
+                        'atm': 101325,
+                        'psi': 6894.76,
+                        'Torr': 133.322
+                    }
+                },
+                'Năng Lượng': {
+                    'baseUnit': 'J',
+                    'units': {
+                        'J': 1,
+                        'kJ': 1000,
+                        'cal': 4.184,
+                        'kcal': 4184,
+                        'Wh': 3600,
+                        'kWh': 3.6e6,
+                        'BTU': 1055.06
+                    }
+                }
+            };
+            
+            function populateCategorySelect() {
+                for (const category in conversionData) {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categorySelect.appendChild(option);
+                }
+            }
+
+            function populateUnitSelects(category) {
+                inputUnitEl.innerHTML = '';
+                outputUnitEl.innerHTML = '';
+                const units = conversionData[category].units;
+                for (const unit in units) {
+                    const option1 = document.createElement('option');
+                    option1.value = unit;
+                    option1.textContent = unit;
+                    inputUnitEl.appendChild(option1);
+
+                    const option2 = document.createElement('option');
+                    option2.value = unit;
+                    option2.textContent = unit;
+                    outputUnitEl.appendChild(option2);
+                }
+                if (category === 'Nhiệt Độ') {
+                    inputUnitEl.value = 'C';
+                    outputUnitEl.value = 'F';
+                }
+            }
+
+            function convertUnits() {
+                const category = categorySelect.value;
+                const inputValue = parseFloat(inputValueEl.value);
+                const inputUnit = inputUnitEl.value;
+                const outputUnit = outputUnitEl.value;
+                const data = conversionData[category];
+
+                if (isNaN(inputValue)) {
+                    resultEl.textContent = 'Nhập một số hợp lệ';
+                    resultEl.style.color = 'var(--button-danger)';
+                    return;
+                }
+                
+                let convertedValue;
+                if (category === 'Nhiệt Độ') {
+                    const valueInBase = data.units[inputUnit].toBase(inputValue);
+                    convertedValue = data.units[outputUnit].fromBase(valueInBase);
+                } else {
+                    const valueInBase = inputValue * data.units[inputUnit];
+                    convertedValue = valueInBase / data.units[outputUnit];
+                }
+
+                resultEl.textContent = `${convertedValue.toLocaleString('vi-VN', { maximumFractionDigits: 2 })} ${outputUnit}`;
+                resultEl.style.color = 'var(--accent-color)';
+            }
+
+            categorySelect.addEventListener('change', () => {
+                populateUnitSelects(categorySelect.value);
+                convertUnits();
+            });
+            inputValueEl.addEventListener('input', convertUnits);
+            inputUnitEl.addEventListener('change', convertUnits);
+            outputUnitEl.addEventListener('change', convertUnits);
+
+            populateCategorySelect();
+            populateUnitSelects(categorySelect.value);
+            convertUnits();
+        });
+    </script>
+</body>
+</html>

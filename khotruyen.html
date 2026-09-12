@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="img/logo/favicon-round.png">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="khotruyen.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <header class="header-story">
+        <h1>Kho Truyện Online</h1>
+        <p>Thế giới của những câu chuyện, nơi trí tưởng tượng không có giới hạn!</p>
+    </header>
+    <main>
+        <section id="story-section" class="section-container">
+            <div id="story-category-container"></div>
+            <div id="story-list-container"></div>
+            <div id="story-content-container" class="story-content-detail" style="display: none;">
+                <button id="back-to-stories-btn" class="back-btn">Quay lại danh sách truyện</button>
+                <h3 id="story-title"></h3>
+                <div id="story-text"></div>
+            </div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const storyListContainer = document.getElementById('story-list-container');
+            const storyContentContainer = document.getElementById('story-content-container');
+            const storyTitle = document.getElementById('story-title');
+            const storyText = document.getElementById('story-text');
+            const backToStoriesBtn = document.getElementById('back-to-stories-btn');
+            const storyCategoryContainer = document.getElementById('story-category-container');
+
+            const stories = [
+                {
+                    title: "Chuyến du hành vũ trụ",
+                    category: "Khoa học viễn tưởng",
+                    content: "Trong một đêm trăng tròn, một chú mèo con đã quyết định thực hiện chuyến du hành đầu tiên của mình. Lấy trộm chiếc mũ phi hành gia cũ của người chủ, nó lẻn ra khỏi nhà và bước lên con tàu vũ trụ tự chế mà nó đã bí mật lắp ráp trong nhiều năm. Chuyến đi của nó không chỉ là một cuộc phiêu lưu, mà còn là hành trình tìm kiếm một hành tinh huyền thoại, nơi tất cả các loài mèo có thể nói chuyện với nhau bằng ngôn ngữ riêng của chúng. Trên đường đi, chú mèo gặp phải nhiều thách thức, từ những cơn bão thiên thạch cho đến những sinh vật ngoài hành tinh kỳ lạ, nhưng với lòng dũng cảm và sự tò mò, nó vẫn tiếp tục hành trình."
+                },
+                {
+                    title: "Bức tranh bị lãng quên",
+                    category: "Huyền bí",
+                    content: "Một họa sĩ già sống một mình trong căn gác xép. Cả đời ông đã vẽ hàng trăm bức tranh, nhưng chỉ có một bức tranh duy nhất ông luôn giữ lại cho mình. Bức tranh đó đã cũ, màu sắc đã phai mờ, nhưng ẩn chứa một bí mật kinh hoàng. Mỗi khi có ai đó nhìn vào bức tranh, họ sẽ cảm nhận được nỗi buồn và sự cô đơn vô tận của người họa sĩ. Không ai biết người họa sĩ đã vẽ gì trong bức tranh đó, chỉ biết rằng bức tranh đó đã lấy đi linh hồn của những ai dám nhìn vào nó."
+                },
+                {
+                    title: "Bí mật của khu vườn",
+                    category: "Kỳ ảo",
+                    content: "Bên trong khu vườn cũ kỹ của bà ngoại là một bí mật mà không ai biết, một cánh cửa dẫn đến thế giới đầy kỳ diệu và ma thuật. Cô bé Lily tình cờ phát hiện ra cánh cửa này khi đang chơi trốn tìm. Phía sau cánh cửa, cô bé tìm thấy một khu rừng rực rỡ với những bông hoa biết hát và những con suối lấp lánh như kim cương. Thế giới này được cai trị bởi một nữ hoàng xinh đẹp nhưng độc ác. Lily phải tìm cách thoát ra khỏi thế giới này và cứu những người bạn mới của mình trước khi quá muộn."
+                },
+                {
+                    title: "Hòn đảo ánh trăng",
+                    category: "Kỳ ảo",
+                    content: "Mỗi năm một lần, khi trăng lên cao nhất, một hòn đảo nhỏ sẽ hiện lên từ đại dương. Nơi đó chứa đựng những báu vật không thể tưởng tượng, và chỉ những người có trái tim thuần khiết mới có thể đặt chân lên đó. Một chàng thủy thủ trẻ tuổi đã dành cả đời mình để tìm kiếm hòn đảo này. Anh đã vượt qua những cơn bão dữ dội, đối mặt với những con quái vật biển khổng lồ, và cuối cùng, anh đã tìm thấy hòn đảo ánh trăng. Nhưng khi đặt chân lên đó, anh mới nhận ra rằng báu vật quý giá nhất không phải là vàng bạc, mà là sự bình yên trong tâm hồn."
+                },
+                {
+                    title: "Lời nguyền của chiếc đồng hồ cát",
+                    category: "Huyền bí",
+                    content: "Chiếc đồng hồ cát cổ xưa trong thư viện cất giấu một lời nguyền. Mỗi hạt cát rơi xuống, một ký ức lại tan biến. Một cô gái trẻ đã tìm thấy chiếc đồng hồ này và vô tình kích hoạt lời nguyền. Cô phải tìm cách phá vỡ lời nguyền trước khi tất cả ký ức của cô biến mất mãi mãi. Cô phải đối mặt với những bóng ma trong quá khứ, những bí mật đen tối của gia đình mình, và những thử thách mà không ai có thể tưởng tượng được."
+                },
+                {
+                    title: "Thành phố dưới lòng đất",
+                    category: "Khoa học viễn tưởng",
+                    content: "Trong một thế giới hậu tận thế, một nhóm người sống sót đã tìm thấy một thành phố cổ đại dưới lòng đất. Thành phố này được xây dựng bởi một nền văn minh tiên tiến đã bị diệt vong. Những người sống sót phải tìm cách khôi phục lại công nghệ của nền văn minh này để cứu lấy thế giới. Nhưng họ không biết rằng, thành phố này còn ẩn chứa một bí mật kinh hoàng, một con quái vật đã ngủ quên hàng nghìn năm, và đang chờ đợi để thức tỉnh."
+                },
+                {
+                    title: "Phù thủy và chú rồng con",
+                    category: "Kỳ ảo",
+                    content: "Một phù thủy già đã dành cả đời mình để tìm kiếm một chú rồng. Nhưng khi tìm thấy, chú rồng đó lại chỉ là một quả trứng nhỏ. Phù thủy quyết định nuôi chú rồng con, dạy nó phép thuật và các bí mật của thế giới. Khi chú rồng lớn lên, nó trở thành một sinh vật mạnh mẽ và đáng sợ, nhưng trái tim của nó vẫn là một chú rồng con. Cả hai đã cùng nhau vượt qua nhiều thử thách, đối mặt với những phù thủy độc ác khác, và cuối cùng, họ đã tìm ra bí mật về sự tồn tại của loài rồng."
+                },
+                {
+                    title: "Người bán hàng rong trên dải ngân hà", 
+                    category: "Khoa học viễn tưởng", 
+                    content: "Trên một con tàu vũ trụ cũ kỹ, một người bán hàng rong đã du hành qua hàng nghìn thiên hà, bán những món đồ lặt vặt và kể những câu chuyện kỳ bí. Mỗi món đồ của anh đều có một câu chuyện riêng, một bí mật chưa được khám phá. Một ngày nọ, anh gặp một cô gái trẻ, người đang tìm kiếm một món đồ duy nhất có thể cứu lấy thế giới của cô. Chuyến đi của họ không chỉ là một cuộc phiêu lưu, mà còn là một hành trình tìm kiếm sự thật, tình bạn và lòng dũng cảm."
+                },
+                {
+                    title: "Huyền thoại về cây cầu ánh sáng", 
+                    category: "Kỳ ảo", 
+                    content: "Tương truyền rằng, có một cây cầu được làm từ ánh sáng mặt trăng. Ai bước qua cây cầu đó sẽ có thể bay đến bất kỳ nơi nào họ muốn. Một chàng hoàng tử trẻ tuổi đã quyết định tìm kiếm cây cầu này để tìm lại người con gái mà anh yêu. Anh đã phải vượt qua những cơn bão dữ dội, đối mặt với những quái vật đáng sợ, và cuối cùng, anh đã tìm thấy cây cầu ánh sáng. Nhưng anh nhận ra rằng, người con gái anh yêu không cần một cây cầu để bay, mà chỉ cần một trái tim dũng cảm để theo đuổi ước mơ của mình."
+                },
+                {
+                    title: "Giọt nước mắt của tiên cá", 
+                    category: "Kỳ ảo", 
+                    content: "Giọt nước mắt của một nàng tiên cá không phải là nước, mà là những viên ngọc trai lấp lánh. Mỗi viên ngọc trai lại ẩn chứa một điều ước chưa thành hiện thực. Một chàng trai trẻ đã tìm thấy một viên ngọc trai này và vô tình kích hoạt điều ước. Anh đã ước mình có thể trở thành một người đàn ông giàu có và quyền lực, nhưng anh không biết rằng, điều ước đó đã lấy đi linh hồn của anh. Anh phải tìm cách phá vỡ lời nguyền và trả lại viên ngọc trai cho nàng tiên cá trước khi anh biến mất mãi mãi."
+                },
+                {
+                    title: "Bí ẩn của thành phố sương mù", 
+                    category: "Huyền bí", 
+                    content: "Có một thành phố mà mỗi khi màn sương bao phủ, mọi thứ sẽ thay đổi. Những con đường sẽ biến mất, và những ngôi nhà sẽ di chuyển đến những nơi xa lạ. Một nhà thám hiểm đã quyết định khám phá bí mật của thành phố này. Anh đã phải đối mặt với những con quái vật đáng sợ, những bí mật đen tối của thành phố, và cuối cùng, anh đã tìm ra bí mật về sự tồn tại của thành phố này. Nhưng anh không biết rằng, thành phố này còn ẩn chứa một bí mật kinh hoàng, một con quái vật đã ngủ quên hàng nghìn năm, và đang chờ đợi để thức tỉnh."
+                },
+                // Thêm 5 câu chuyện mới
+                {
+                    title: "Hành trình xuyên thời gian của chiếc đồng hồ",
+                    category: "Khoa học viễn tưởng",
+                    content: "Chiếc đồng hồ của ông nội có khả năng đưa người đeo du hành xuyên thời gian. Một cô bé đã vô tình tìm thấy chiếc đồng hồ này và bắt đầu cuộc phiêu lưu kỳ diệu của mình. Cô gặp những vị anh hùng trong quá khứ, những nhà khoa học lỗi lạc ở tương lai, và khám phá ra những bí mật lớn của lịch sử nhân loại. Cô bé phải sử dụng chiếc đồng hồ một cách cẩn thận, vì mỗi lần thay đổi quá khứ đều có thể làm thay đổi tương lai."
+                },
+                {
+                    title: "Cây cầu của những giấc mơ",
+                    category: "Kỳ ảo",
+                    content: "Ở một vùng đất xa xôi, có một cây cầu được làm từ những giấc mơ của con người. Mỗi khi một người mơ ước, một viên gạch mới sẽ được thêm vào cây cầu. Một chàng trai trẻ đã đi tìm cây cầu này để tìm lại giấc mơ đã mất của mình. Anh phải vượt qua những cơn ác mộng, đối mặt với những nỗi sợ hãi thầm kín, và cuối cùng, anh đã tìm thấy cây cầu của những giấc mơ. Nhưng anh nhận ra rằng, giấc mơ đã mất không thể tìm lại, mà anh phải tạo ra một giấc mơ mới."
+                },
+                {
+                    title: "Bóng ma trong gương",
+                    category: "Huyền bí",
+                    content: "Trong một căn nhà cổ, có một chiếc gương đã bị bỏ quên. Chiếc gương này không phản chiếu hình ảnh của người đứng trước nó, mà lại phản chiếu một bóng ma. Bóng ma đó là một cô gái trẻ đã bị giam cầm trong gương hàng trăm năm. Một cô bé đã vô tình tìm thấy chiếc gương này và bắt đầu cuộc hành trình giải thoát bóng ma. Cô bé phải đối mặt với những thử thách đáng sợ, khám phá những bí mật đen tối của căn nhà, và cuối cùng, cô đã giúp bóng ma tìm lại tự do."
+                },
+                {
+                    title: "Lá thư từ tương lai",
+                    category: "Khoa học viễn tưởng",
+                    content: "Một lá thư đã được gửi đến một cô gái từ tương lai. Lá thư đó đã tiết lộ cho cô gái biết về những bí mật của thế giới, những sự kiện sẽ xảy ra trong tương lai gần. Cô gái phải sử dụng những thông tin này để cứu lấy thế giới khỏi một thảm họa khủng khiếp. Cô phải đối mặt với những khó khăn, những âm mưu đen tối, và cuối cùng, cô đã thành công."
+                },
+                {
+                    title: "Vùng đất của những giấc mơ",
+                    category: "Kỳ ảo",
+                    content: "Có một vùng đất mà chỉ những người đang ngủ mới có thể đến. Ở đó, mọi giấc mơ đều trở thành hiện thực. Một cô bé đã lạc vào vùng đất này và khám phá ra những điều kỳ diệu. Cô gặp những sinh vật thần thoại, những phù thủy tốt bụng, và những người bạn mới. Cô bé phải tìm cách trở về thế giới thực trước khi giấc mơ trở thành ác mộng."
+                }
+            ];
+            const storyCategories = ["Tất cả", "Khoa học viễn tưởng", "Huyền bí", "Kỳ ảo"];
+
+            function renderStoryCategories() {
+                storyCategoryContainer.innerHTML = '';
+                storyCategories.forEach((category, index) => {
+                    const btn = document.createElement('button');
+                    btn.classList.add('category-btn');
+                    if (index === 0) {
+                        btn.classList.add('active');
+                    }
+                    btn.innerText = category;
+                    btn.dataset.category = category;
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        renderStories(category);
+                    });
+                    storyCategoryContainer.appendChild(btn);
+                });
+            }
+
+            function renderStories(filterCategory = "Tất cả") {
+                storyListContainer.innerHTML = '';
+                const filteredStories = filterCategory === "Tất cả" ? stories : stories.filter(s => s.category === filterCategory);
+                
+                filteredStories.forEach((story, index) => {
+                    const storyElement = document.createElement('div');
+                    storyElement.classList.add('story-item');
+                    storyElement.dataset.index = stories.findIndex(s => s.title === story.title);
+                    storyElement.innerHTML = `<h3>${story.title}</h3><p>${story.category}</p>`;
+                    storyListContainer.appendChild(storyElement);
+                });
+
+                const storyItems = document.querySelectorAll('.story-item');
+                storyItems.forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const index = e.currentTarget.dataset.index;
+                        const story = stories[index];
+                        storyTitle.innerText = story.title;
+                        storyText.innerText = story.content;
+                        storyCategoryContainer.style.display = 'none';
+                        storyListContainer.style.display = 'none';
+                        storyContentContainer.style.display = 'block';
+                    });
+                });
+            }
+
+            backToStoriesBtn.addEventListener('click', () => {
+                storyCategoryContainer.style.display = 'flex';
+                storyListContainer.style.display = 'grid';
+                storyContentContainer.style.display = 'none';
+            });
+
+            renderStoryCategories();
+            renderStories();
+        });
+    </script>
+    <div id="footer-placeholder"></div>
+    <div id="music-placeholder"></div>
+    <div id="modals-placeholder"></div>
+
+    <script src="layout.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

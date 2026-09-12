@@ -1,0 +1,86 @@
+:root {
+    --bg-color: #1a1a2e;
+    --main-color: #ff527b;
+    --card-bg: #1e2a4a;
+    --text-color: #e5e5e5;
+    --button-color: #00bcd4;
+    --box-color: #ffde5c; /* Màu vàng vô tri */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#game-container {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#game-area {
+    width: 600px;
+    height: 400px;
+    background-color: #111827;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    cursor: crosshair;
+    border: 2px solid var(--border-color);
+}
+
+#votri-box {
+    width: 50px;
+    height: 50px;
+    background-color: var(--box-color);
+    border-radius: 8px;
+    position: absolute;
+    transition: left 0.1s ease-in-out, top 0.1s ease-in-out;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px var(--box-color);
+    cursor: pointer;
+}
+
+#game-info {
+    text-align: center;
+}
+
+#game-info p {
+    font-size: 1.2em;
+    margin: 5px 0;
+}
+
+#game-info button {
+    background-color: var(--button-color);
+    color: var(--bg-color);
+    font-weight: 600;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+#game-info button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px var(--button-color);
+}

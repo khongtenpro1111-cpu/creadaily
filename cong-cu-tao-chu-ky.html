@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công Cụ Tạo Chữ Ký</title>
+    <link rel="icon" type="image/png" href="img/logo/favicon-round.png">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Alex+Brush&family=Allura&family=Amatic+SC&family=Beth+Ellen&family=Bilbo+Swash+Caps&family=Caveat&family=Cedarville+Cursive&family=Clicker+Script&family=Covered+By+Your+Grace&family=Courgette&family=Cutive+Mono&family=Damion&family=Dancing+Script&family=Euphoria+Script&family=Fasthand&family=Great+Vibes&family=Homemade+Apple&family=Inspiration&family=Kalam&family=La+Belle+Aurore&family=Leckerli+One&family=Liu+Jian+Mao+Cao&family=Lobster&family=Luxurious+Roman&family=Marck+Script&family=Meow+Script&family=Monsieur+La+Doulaise&family=Nanum+Pen+Script&family=Nothing+You+Could+Do&family=Norican&family=Oooh+Baby&family=Over+the+Rainbow&family=Pacifico&family=Parisienne&family=Pinyon+Script&family=Pompiere&family=Qwitcher+Grypen&family=Rancho&family=Redressed&family=Reenie+Beanie&family=Rochester&family=Sacramento&family=Satisfy&family=Shadows+Into+Light&family=Shizuru&family=Sue+Ellen+Francisco&family=Sura&family=Tangerine&family=The+Girl+Next+Door&family=Vibes&family=Vujahday+Script&family=Whisper&family=Wire+One&family=Yuji+Boku+Font&family=Yesteryear&family=Zeyada&display=swap" rel="stylesheet">
+    <style>
+
+        h1, h2, h3, h4 {
+            font-weight: 600;
+        }
+
+        /* ==================== GIAO DIỆN CHÍNH CỦA CÔNG CỤ ==================== */
+        .signature-container {
+            max-width: 900px;
+            margin: 0 auto 50px;
+            padding: 35px 30px;
+            text-align: center;
+            background: var(--card-bg) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius-lg, 20px) !important;
+            border: 1px solid var(--card-border) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+        }
+
+        .input-group input {
+            width: 80%;
+            max-width: 400px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        .signature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .signature-item {
+            background-color: var(--bg-color);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            word-break: break-all;
+        }
+
+        .signature-item:hover, .signature-item.selected {
+            border-color: var(--main-color);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.3);
+        }
+
+        .signature-text {
+            font-size: 2.5em;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .download-btn {
+            margin-top: 30px;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: var(--main-color);
+        }
+
+        /* ==================== MEDIA QUERIES (RESPONSIVE) ==================== */
+        @media (max-width: 768px) {
+            .signature-container {
+                padding: 20px;
+            }
+            .signature-text {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <header class="header-inspiration" style="padding: 3rem 1rem; text-align: center;">
+        <h1>Công Cụ Tạo Chữ Ký</h1>
+        <p>Chọn một font chữ độc đáo để tạo chữ ký của riêng bạn</p>
+    </header>
+
+    <main style="padding: 2rem 1rem;">
+        <div class="signature-container">
+            <h2>Nhập Tên Của Bạn</h2>
+            <div class="input-group">
+                <input type="text" id="name-input" placeholder="Nhập tên">
+            </div>
+
+            <div id="signature-grid" class="signature-grid">
+                </div>
+            
+            <button id="download-btn" class="download-btn" style="display: none;">Tải Xuống Chữ Ký</button>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+    <div id="music-placeholder"></div>
+    <div id="modals-placeholder"></div>
+
+    <script src="layout.js"></script>
+    <script src="main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nameInput = document.getElementById('name-input');
+            const signatureGrid = document.getElementById('signature-grid');
+            const downloadBtn = document.getElementById('download-btn');
+
+            const signatureFonts = [
+                'Alex Brush', 'Allura', 'Amatic SC', 'Beth Ellen', 'Bilbo Swash Caps',
+                'Caveat', 'Cedarville Cursive', 'Clicker Script', 'Covered By Your Grace',
+                'Courgette', 'Cutive Mono', 'Damion', 'Dancing Script', 'Euphoria Script',
+                'Fasthand', 'Great Vibes', 'Homemade Apple', 'Inspiration',
+                'Kalam', 'La Belle Aurore', 'Leckerli One', 'Liu Jian Mao Cao',
+                'Lobster', 'Luxurious Roman', 'Marck Script', 'Meow Script',
+                'Monsieur La Doulaise', 'Nanum Pen Script', 'Nothing You Could Do',
+                'Norican', 'Oooh Baby', 'Over the Rainbow', 'Pacifico', 'Parisienne',
+                'Pinyon Script', 'Pompiere', 'Qwitcher Grypen', 'Rancho', 'Redressed',
+                'Reenie Beanie', 'Rochester', 'Sacramento', 'Satisfy', 'Shadows Into Light',
+                'Shizuru', 'Sue Ellen Francisco', 'Sura', 'Tangerine', 'The Girl Next Door',
+                'Vibes', 'Vujahday Script', 'Whisper', 'Wire One', 'Yuji Boku Font',
+                'Yesteryear', 'Zeyada'
+            ];
+            
+            let selectedSignature = null;
+            
+            function renderSignatures() {
+                signatureGrid.innerHTML = '';
+                const name = nameInput.value || 'Chữ ký';
+                signatureFonts.forEach(font => {
+                    const item = document.createElement('div');
+                    item.classList.add('signature-item');
+                    item.dataset.font = font;
+                    item.innerHTML = `
+                        <div class="signature-text" style="font-family: '${font}', cursive;">${name}</div>
+                        <p>${font}</p>
+                    `;
+                    signatureGrid.appendChild(item);
+                });
+            }
+
+            async function downloadSignature() {
+                if (!selectedSignature) {
+                    alert('Vui lòng chọn một kiểu chữ ký trước.');
+                    return;
+                }
+                
+                const text = selectedSignature.textContent;
+                const font = selectedSignature.dataset.font;
+                
+                downloadBtn.textContent = 'Đang chuẩn bị...';
+                downloadBtn.disabled = true;
+
+                // Tạo một Promise để chờ font load xong
+                await document.fonts.load(`60px "${font}"`);
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                ctx.font = `60px "${font}"`;
+                const metrics = ctx.measureText(text);
+                const textWidth = metrics.width;
+                const textHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+                
+                canvas.width = textWidth + 40;
+                canvas.height = textHeight + 40;
+                
+                ctx.font = `60px "${font}"`;
+                ctx.fillStyle = '#000000';
+                ctx.fillText(text, 20, textHeight + 20);
+                
+                const dataURL = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = `chu-ky-${font}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                downloadBtn.textContent = 'Tải Xuống Chữ Ký';
+                downloadBtn.disabled = false;
+            }
+
+            function selectSignature(event) {
+                document.querySelectorAll('.signature-item').forEach(item => item.classList.remove('selected'));
+                
+                const selectedItem = event.target.closest('.signature-item');
+                if (selectedItem) {
+                    selectedItem.classList.add('selected');
+                    selectedSignature = selectedItem.querySelector('.signature-text');
+                    downloadBtn.style.display = 'block';
+                }
+            }
+            
+            nameInput.addEventListener('input', (e) => {
+                const name = e.target.value || 'Chữ ký';
+                document.querySelectorAll('.signature-text').forEach(sig => {
+                    sig.textContent = name;
+                });
+            });
+            
+            signatureGrid.addEventListener('click', selectSignature);
+
+            downloadBtn.addEventListener('click', downloadSignature);
+            
+            renderSignatures();
+        });
+    </script>
+</body>
+</html>

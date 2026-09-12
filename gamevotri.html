@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò Chơi Vô Tri (Cực Mạnh)</title>
+    <link rel="stylesheet" href="gamevotri.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Trò Chơi Vô Tri</h1>
+        <p>Thử thách duy nhất của anh là... cố gắng bắt được em!</p>
+    </header>
+
+    <main id="game-container">
+        <div id="game-area">
+            <div id="votri-box"></div>
+        </div>
+        <div id="game-info">
+            <p>Anh đã click <span id="click-count">0</span> lần.</p>
+            <p id="message">Hãy thử click vào em đi...</p>
+            <button id="reset-btn">Chơi lại</button>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameArea = document.getElementById('game-area');
+            const votriBox = document.getElementById('votri-box');
+            const clickCountSpan = document.getElementById('click-count');
+            const messageEl = document.getElementById('message');
+            const resetBtn = document.getElementById('reset-btn');
+
+            let clickCount = 0;
+            let gameStarted = false;
+            let moveInterval;
+
+            const getRandomPosition = () => {
+                const gameAreaRect = gameArea.getBoundingClientRect();
+                const boxSize = votriBox.offsetWidth;
+                const maxX = gameAreaRect.width - boxSize;
+                const maxY = gameAreaRect.height - boxSize;
+                const randomX = Math.random() * maxX;
+                const randomY = Math.random() * maxY;
+                return { x: randomX, y: randomY };
+            };
+
+            const getRandomSize = () => {
+                const minSize = 30;
+                const maxSize = 80;
+                return Math.random() * (maxSize - minSize) + minSize;
+            };
+
+            const getRandomColor = () => {
+                const letters = '0123456789ABCDEF';
+                let color = '#';
+                for (let i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            };
+
+            const moveVotriBox = () => {
+                const { x, y } = getRandomPosition();
+                votriBox.style.left = `${x}px`;
+                votriBox.style.top = `${y}px`;
+
+                const randomSize = getRandomSize();
+                votriBox.style.width = `${randomSize}px`;
+                votriBox.style.height = `${randomSize}px`;
+                votriBox.style.backgroundColor = getRandomColor();
+
+                const randomDuration = Math.random() * (0.5 - 0.1) + 0.1;
+                votriBox.style.transitionDuration = `${randomDuration}s`;
+            };
+
+            const startGame = () => {
+                if (gameStarted) return;
+                gameStarted = true;
+                moveInterval = setInterval(moveVotriBox, 500); // Tự động di chuyển sau mỗi 0.5s
+                messageEl.innerText = 'Rồi, bắt đầu vô tri đi nào!';
+            };
+
+            const stopGame = () => {
+                clearInterval(moveInterval);
+                gameStarted = false;
+            };
+
+            votriBox.addEventListener('click', (e) => {
+                clickCount++;
+                clickCountSpan.innerText = clickCount;
+
+                let newMsg = 'Anh đã bắt được em rồi đấy!';
+                if (clickCount === 1) {
+                    newMsg = 'Chúc mừng anh đã bắt được em lần đầu tiên!';
+                } else if (clickCount > 1 && clickCount < 5) {
+                    newMsg = `Anh bắt em được ${clickCount} lần rồi đấy, anh giỏi quá!`;
+                } else if (clickCount >= 5 && clickCount < 10) {
+                    newMsg = 'Hình như anh đang rảnh lắm đúng không?';
+                } else if (clickCount >= 10 && clickCount < 20) {
+                    newMsg = 'Anh ơi, mình chơi gì khác đi...';
+                } else if (clickCount >= 20) {
+                    newMsg = 'Thôi, anh thắng rồi đấy, vô tri quá!';
+                    stopGame();
+                }
+                messageEl.innerText = newMsg;
+            });
+            
+            resetBtn.addEventListener('click', () => {
+                stopGame();
+                clickCount = 0;
+                clickCountSpan.innerText = 0;
+                messageEl.innerText = 'Bắt đầu chơi lại đi anh Kiên!';
+                moveVotriBox();
+                startGame();
+            });
+
+            startGame();
+        });
+    </script>
+</body>
+</html>

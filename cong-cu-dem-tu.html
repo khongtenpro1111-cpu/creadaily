@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công Cụ Đếm Từ</title>
+    <link rel="icon" type="image/png" href="img/logo/favicon-round.png">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+
+        h1, h2, h3, h4 {
+            font-weight: 600;
+        }
+
+        /* ==================== GIAO DIỆN CHÍNH CỦA CÔNG CỤ ==================== */
+        .word-counter-container {
+            max-width: 800px;
+            margin: 0 auto 50px;
+            padding: 35px 30px;
+            text-align: center;
+            background: var(--card-bg) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius-lg, 20px) !important;
+            border: 1px solid var(--card-border) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .word-counter-container textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1em;
+            resize: vertical;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .word-counter-container textarea:focus {
+            border-color: var(--main-color);
+        }
+        
+        .counter-display {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .counter-item {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin: 10px;
+            color: var(--accent-color);
+        }
+        
+        .counter-item span {
+            color: var(--main-color);
+            font-size: 1.5em;
+        }
+
+        /* ==================== MEDIA QUERIES (RESPONSIVE) ==================== */
+        @media (max-width: 768px) {
+            .word-counter-container {
+                padding: 20px;
+            }
+            .counter-item {
+                font-size: 1em;
+            }
+            .counter-item span {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <header class="header-inspiration" style="padding: 3rem 1rem; text-align: center;">
+        <h1>Công Cụ Đếm Từ</h1>
+        <p>Đếm số từ, ký tự và đoạn văn bản một cách nhanh chóng</p>
+    </header>
+
+    <main style="padding: 2rem 1rem;">
+        <div class="word-counter-container">
+            <h2>Nhập văn bản của bạn vào đây</h2>
+            <textarea id="text-input" placeholder="Bắt đầu gõ hoặc dán văn bản của bạn..."></textarea>
+            <div class="counter-display">
+                <div class="counter-item">Số từ: <span id="word-count">0</span></div>
+                <div class="counter-item">Số ký tự: <span id="char-count">0</span></div>
+                <div class="counter-item">Số đoạn: <span id="paragraph-count">0</span></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+    <div id="music-placeholder"></div>
+    <div id="modals-placeholder"></div>
+
+    <script src="layout.js"></script>
+    <script src="main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const textInput = document.getElementById('text-input');
+            const wordCountEl = document.getElementById('word-count');
+            const charCountEl = document.getElementById('char-count');
+            const paragraphCountEl = document.getElementById('paragraph-count');
+
+            function updateCounter() {
+                const text = textInput.value;
+                
+                // Đếm số ký tự
+                const charCount = text.length;
+                charCountEl.textContent = charCount;
+                
+                // Đếm số từ
+                const words = text.split(/\s+/).filter(word => word.length > 0);
+                const wordCount = words.length;
+                wordCountEl.textContent = wordCount;
+                
+                // Đếm số đoạn (dựa trên dấu xuống dòng)
+                const paragraphs = text.split(/\n/).filter(para => para.trim().length > 0);
+                const paragraphCount = paragraphs.length;
+                paragraphCountEl.textContent = paragraphCount;
+            }
+
+            textInput.addEventListener('input', updateCounter);
+
+            // Chạy lần đầu khi tải trang
+            updateCounter();
+        });
+    </script>
+</body>
+</html>

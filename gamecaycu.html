@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuộc Phiêu Lưu của Hộp Vuông Đáng Yêu</title>
+    <link rel="stylesheet" href="gamecaycu.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Cuộc Phiêu Lưu của Hộp Vuông Đáng Yêu</h1>
+        <p>Liệu bạn có đủ kiên nhẫn để vượt qua?</p>
+    </header>
+
+    <main id="game-container">
+        <div id="game-area">
+            <div id="player"></div>
+        </div>
+        <div id="game-info">
+            <p>Điểm: <span id="score">0</span></p>
+            <p id="message">Nhấn phím cách hoặc click để nhảy</p>
+            <button id="start-btn">Bắt đầu</button>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const player = document.getElementById('player');
+            const gameArea = document.getElementById('game-area');
+            const scoreDisplay = document.getElementById('score');
+            const startBtn = document.getElementById('start-btn');
+            const messageEl = document.getElementById('message');
+
+            let isJumping = false;
+            let gravity = 0.9;
+            let playerPosition = 0;
+            let isGameOver = false;
+            let score = 0;
+            let obstacleInterval;
+            let scoreInterval;
+
+            function control(e) {
+                if (e.key === ' ' || e.type === 'click') {
+                    if (!isJumping) {
+                        isJumping = true;
+                        jump();
+                    }
+                }
+            }
+
+            function jump() {
+                let count = 0;
+                let upTimerId = setInterval(function () {
+                    if (count === 15) {
+                        clearInterval(upTimerId);
+                        let downTimerId = setInterval(function () {
+                            if (count === 0) {
+                                clearInterval(downTimerId);
+                                isJumping = false;
+                            }
+                            playerPosition -= 5;
+                            count--;
+                            playerPosition *= gravity;
+                            player.style.bottom = playerPosition + 'px';
+                        }, 20);
+                    }
+                    playerPosition += 30;
+                    count++;
+                    playerPosition *= gravity;
+                    player.style.bottom = playerPosition + 'px';
+                }, 20);
+            }
+
+            function generateObstacles() {
+                let randomTime = Math.random() * 4000 + 1000;
+                let obstaclePosition = 1200;
+                const obstacle = document.createElement('div');
+                if (!isGameOver) {
+                    obstacle.classList.add('obstacle');
+                }
+                gameArea.appendChild(obstacle);
+                obstacle.style.left = obstaclePosition + 'px';
+
+                let timerId = setInterval(function() {
+                    if (obstaclePosition > 0 && obstaclePosition < 60 && playerPosition < 60) {
+                        clearInterval(timerId);
+                        isGameOver = true;
+                        messageEl.innerText = `Game Over! Số điểm của bạn là: ${score}`;
+                        startBtn.innerText = 'Chơi lại';
+                        while (gameArea.firstChild) {
+                            gameArea.removeChild(gameArea.lastChild);
+                        }
+                    }
+                    obstaclePosition -= 10;
+                    obstacle.style.left = obstaclePosition + 'px';
+                }, 20);
+
+                if (!isGameOver) {
+                    setTimeout(generateObstacles, randomTime);
+                }
+            }
+
+            function startGame() {
+                if (isGameOver) {
+                    location.reload();
+                }
+                isGameOver = false;
+                score = 0;
+                scoreDisplay.innerText = score;
+                messageEl.innerText = 'Nhấn phím cách hoặc click để nhảy';
+                
+                document.addEventListener('keyup', control);
+                gameArea.addEventListener('click', control);
+
+                generateObstacles();
+                scoreInterval = setInterval(() => {
+                    score++;
+                    scoreDisplay.innerText = score;
+                }, 100);
+            }
+
+            startBtn.addEventListener('click', () => {
+                startGame();
+            });
+        });
+    </script>
+</body>
+</html>
