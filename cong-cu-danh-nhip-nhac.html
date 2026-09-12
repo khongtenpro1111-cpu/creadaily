@@ -97,6 +97,18 @@
             flex-wrap: wrap;
         }
 
+        .stats-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         .stats-item strong {
             color: #fff;
             font-size: 1.05rem;
@@ -1109,6 +1121,315 @@
             box-shadow: 0 6px 20px rgba(247, 37, 133, 0.6);
         }
 
+        /* Timer Countdown Display Badge */
+        .timer-countdown-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            background: rgba(247, 37, 133, 0.18);
+            border: 1px solid var(--main-color);
+            border-radius: 20px;
+            color: #ff70a6;
+            font-weight: 700;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.95rem;
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px rgba(247, 37, 133, 0.3); }
+            100% { box-shadow: 0 0 15px rgba(247, 37, 133, 0.7); }
+        }
+
+        /* Timer Tab Status Card */
+        .timer-tab-card {
+            background: rgba(11, 15, 25, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .timer-tab-header {
+            font-size: 0.85rem;
+            color: var(--secondary-text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .timer-tab-big {
+            font-size: 2.2rem;
+            font-weight: 800;
+            font-family: 'Consolas', monospace;
+            color: #fff;
+            letter-spacing: 2px;
+            margin: 6px 0;
+            text-shadow: 0 0 12px rgba(247, 37, 133, 0.5);
+        }
+
+        .timer-progress-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .timer-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--main-color), #7209b7);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        /* Custom Timer Adjustment Controls */
+        .custom-timer-controls {
+            background: rgba(11, 15, 25, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .timer-inputs-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .timer-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 8px 12px;
+            flex: 1;
+            min-width: 90px;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .timer-input-group:focus-within {
+            border-color: var(--main-color);
+            box-shadow: 0 0 12px rgba(247, 37, 133, 0.3);
+            background: rgba(247, 37, 133, 0.08);
+        }
+
+        .timer-num-input {
+            width: 100%;
+            border: none !important;
+            background: transparent !important;
+            color: #fff !important;
+            font-size: 1.4rem !important;
+            font-weight: 800 !important;
+            text-align: center;
+            padding: 2px 0 !important;
+            outline: none;
+            line-height: 1.2;
+        }
+
+        .timer-input-unit {
+            font-size: 0.78rem;
+            color: var(--secondary-text-color);
+            font-weight: 700;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.85;
+            user-select: none;
+        }
+
+        .timer-colon {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--main-color);
+        }
+
+        .custom-timer-apply-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--main-color), #4338ca);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .custom-timer-apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 18px rgba(247, 37, 133, 0.45);
+        }
+
+        .timer-stepper-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .timer-step-pill {
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-color);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .timer-step-pill:hover {
+            background: rgba(247, 37, 133, 0.2);
+            border-color: var(--main-color);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        /* Notice Modal Popup */
+        .notice-card {
+            max-width: 440px !important;
+            padding: 30px 24px !important;
+            text-align: center;
+            background: rgba(15, 20, 32, 0.96) !important;
+            border: 1px solid rgba(247, 37, 133, 0.4) !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(247, 37, 133, 0.3) !important;
+        }
+
+        .notice-icon-wrapper {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 2.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .notice-icon-wrapper.success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 2px solid #10b981;
+            color: #10b981;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);
+            animation: bounceNotice 0.6s ease;
+        }
+
+        .notice-icon-wrapper.warning {
+            background: rgba(245, 158, 11, 0.15);
+            border: 2px solid #f59e0b;
+            color: #f59e0b;
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.35);
+        }
+
+        .notice-icon-wrapper.error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 2px solid #ef4444;
+            color: #ef4444;
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.35);
+        }
+
+        .notice-icon-wrapper.info {
+            background: rgba(79, 70, 229, 0.15);
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            box-shadow: 0 0 25px rgba(79, 70, 229, 0.35);
+        }
+
+        @keyframes bounceNotice {
+            0% { transform: scale(0.4); opacity: 0; }
+            60% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .notice-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 10px;
+        }
+
+        .notice-message {
+            font-size: 0.95rem;
+            color: var(--secondary-text-color);
+            margin: 0 0 20px;
+            line-height: 1.5;
+        }
+
+        .notice-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 18px 0 22px;
+            padding: 12px 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+        }
+
+        .notice-stat-box {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 4px;
+            background: rgba(255, 255, 255, 0.025);
+            border-radius: 10px;
+        }
+
+        .notice-stat-box i {
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+
+        .notice-stat-box .stat-num {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #fff;
+            white-space: nowrap;
+            line-height: 1.2;
+        }
+
+        .notice-stat-box .stat-lbl {
+            font-size: 0.68rem;
+            color: var(--secondary-text-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-top: 3px;
+            white-space: nowrap;
+        }
+
+        .notice-btn {
+            width: 100%;
+            max-width: 220px;
+            padding: 13px 20px !important;
+            border-radius: 25px !important;
+            font-size: 1rem !important;
+            letter-spacing: 0.5px;
+        }
+
         @media (max-width: 650px) {
             .metronome-container {
                 padding: 22px 16px !important;
@@ -1133,10 +1454,106 @@
                 font-size: 1.9rem;
             }
             .stats-bar {
-                font-size: 0.82rem;
-                gap: 10px;
-                padding: 10px 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                padding: 10px;
+                background: rgba(11, 15, 25, 0.75);
+                border-radius: 14px;
+                margin-bottom: 22px;
+            }
+            .stats-item {
+                display: flex;
+                align-items: center;
                 justify-content: space-between;
+                width: 100%;
+                padding: 8px 12px;
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                border-radius: 10px;
+                font-size: 0.85rem;
+                box-sizing: border-box;
+            }
+            .stats-item strong,
+            .stats-item #stat-autostop-wrapper {
+                margin-left: auto;
+            }
+            .timer-countdown-badge {
+                font-size: 0.82rem;
+                padding: 2px 8px;
+            }
+            .timer-tab-card {
+                padding: 14px 10px;
+            }
+            .timer-tab-header {
+                font-size: 0.82rem;
+                flex-wrap: wrap;
+                justify-content: center;
+                text-align: center;
+            }
+            .timer-tab-big {
+                font-size: 2.3rem;
+                margin: 4px 0;
+            }
+            .timer-inputs-row {
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                gap: 8px;
+                align-items: center;
+            }
+            .timer-input-group {
+                min-width: 0 !important;
+                padding: 8px 4px !important;
+            }
+            .timer-colon {
+                text-align: center;
+                margin: 0;
+                font-size: 1.6rem;
+                align-self: center;
+            }
+            .custom-timer-apply-btn {
+                grid-column: 1 / -1;
+                width: 100%;
+                justify-content: center;
+                margin-top: 6px;
+                padding: 12px !important;
+            }
+            .timer-stepper-row {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .timer-stepper-row > span {
+                grid-column: 1 / -1;
+                margin-bottom: 2px;
+            }
+            .timer-step-pill {
+                width: 100%;
+                text-align: center;
+                padding: 8px 4px !important;
+                white-space: nowrap;
+            }
+            .notice-card {
+                padding: 24px 14px !important;
+                width: 95% !important;
+                max-width: 340px !important;
+            }
+            .notice-stats-grid {
+                gap: 5px !important;
+                padding: 10px 4px !important;
+                margin: 14px 0 18px !important;
+            }
+            .notice-stat-box {
+                padding: 6px 2px !important;
+            }
+            .notice-stat-box .stat-num {
+                font-size: 0.95rem !important;
+                white-space: nowrap !important;
+            }
+            .notice-stat-box .stat-lbl {
+                font-size: 0.63rem !important;
+                letter-spacing: 0 !important;
+                white-space: nowrap !important;
             }
             .advanced-tabs-nav {
                 gap: 8px;
@@ -1181,9 +1598,18 @@
         <div class="metronome-container">
             <!-- Stats Bar -->
             <div class="stats-bar">
-                <div class="stats-item"><i class="fas fa-stopwatch" style="color: var(--main-color);"></i> Thời gian tập: <strong id="stat-time">00:00</strong></div>
-                <div class="stats-item"><i class="fas fa-hashtag" style="color: #818cf8;"></i> Ô nhịp đã đánh: <strong id="stat-bars">0</strong></div>
-                <div class="stats-item"><i class="fas fa-hourglass-half" style="color: #fca311;"></i> Tự dừng sau: <strong id="stat-autostop">Tắt</strong></div>
+                <div class="stats-item">
+                    <span class="stats-label"><i class="fas fa-stopwatch" style="color: var(--main-color);"></i> Thời gian tập:</span>
+                    <strong id="stat-time">00:00</strong>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-label"><i class="fas fa-hashtag" style="color: #818cf8;"></i> Ô nhịp đã đánh:</span>
+                    <strong id="stat-bars">0</strong>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-label"><i class="fas fa-hourglass-half" style="color: #fca311;"></i> Tự dừng sau:</span>
+                    <span id="stat-autostop-wrapper"><strong id="stat-autostop">Tắt</strong></span>
+                </div>
             </div>
 
             <!-- BPM Display Section -->
@@ -1502,19 +1928,64 @@
                 <!-- Tab 10: Practice Timer -->
                 <div id="tab-timer" class="tab-content-panel">
                     <h4 style="margin-top:0; color: #fff;"><i class="fas fa-hourglass-start" style="color: #3b82f6; margin-right: 8px;"></i> Hẹn Giờ Tự Động Dừng Tập</h4>
-                    <p style="font-size:0.88rem; color: var(--secondary-text-color);">Đặt thời lượng cho buổi tập. Máy nhịp sẽ tự động dừng lại khi hết thời gian.</p>
+                    <p style="font-size:0.88rem; color: var(--secondary-text-color);">Đặt thời lượng cho buổi tập. Máy nhịp sẽ tự động đếm ngược và dừng lại khi hết thời gian.</p>
 
-                    <div style="max-width: 320px; margin-top: 18px;">
-                        <label style="font-size: 0.88rem; color: var(--secondary-text-color); display: block; margin-bottom: 8px;">Thời gian hẹn dừng:</label>
-                        <select id="autostop-select" class="control-select">
-                            <option value="0" selected>Tắt (Không tự dừng)</option>
-                            <option value="300">5 Phút</option>
-                            <option value="600">10 Phút</option>
-                            <option value="900">15 Phút</option>
-                            <option value="1200">20 Phút</option>
-                            <option value="1800">30 Phút</option>
-                            <option value="3600">60 Phút</option>
-                        </select>
+                    <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 18px; width: 100%;">
+                        <div style="width: 100%;">
+                            <label style="font-size: 0.88rem; color: var(--secondary-text-color); display: block; margin-bottom: 8px;">Chọn nhanh mẫu thời gian:</label>
+                            <select id="autostop-select" class="control-select" style="width: 100%; box-sizing: border-box;">
+                                <option value="0" selected>Tắt (Không tự dừng)</option>
+                                <option value="300">5 Phút</option>
+                                <option value="600">10 Phút</option>
+                                <option value="900">15 Phút</option>
+                                <option value="1200">20 Phút</option>
+                                <option value="1800">30 Phút</option>
+                                <option value="3600">60 Phút</option>
+                                <option value="custom">⚙️ Tùy chỉnh (Số phút & giây)...</option>
+                            </select>
+                        </div>
+
+                        <!-- Custom Time Adjustment Panel -->
+                        <div class="custom-timer-controls" id="custom-timer-controls">
+                            <div style="font-size: 0.85rem; color: var(--secondary-text-color); font-weight: 600;">
+                                <i class="fas fa-sliders-h" style="color: var(--main-color); margin-right: 6px;"></i>Tự Điều Chỉnh Thời Gian Tùy Ý:
+                            </div>
+                            
+                            <div class="timer-inputs-row">
+                                <div class="timer-input-group">
+                                    <input type="number" id="custom-timer-mins" class="control-input timer-num-input" min="0" max="300" value="5" placeholder="0">
+                                    <span class="timer-input-unit">Phút</span>
+                                </div>
+                                <span class="timer-colon">:</span>
+                                <div class="timer-input-group">
+                                    <input type="number" id="custom-timer-secs" class="control-input timer-num-input" min="0" max="59" value="0" placeholder="0">
+                                    <span class="timer-input-unit">Giây</span>
+                                </div>
+                                <button id="apply-custom-timer-btn" class="custom-timer-apply-btn" title="Áp dụng thời gian tự nhập">
+                                    <i class="fas fa-check"></i> Đặt Hẹn
+                                </button>
+                            </div>
+
+                            <!-- Quick Add/Subtract Steppers -->
+                            <div class="timer-stepper-row">
+                                <span style="font-size: 0.78rem; color: var(--secondary-text-color);">Tăng / Giảm nhanh:</span>
+                                <button class="timer-step-pill" data-seconds="-300">-5 Phút</button>
+                                <button class="timer-step-pill" data-seconds="-60">-1 Phút</button>
+                                <button class="timer-step-pill" data-seconds="60">+1 Phút</button>
+                                <button class="timer-step-pill" data-seconds="300">+5 Phút</button>
+                            </div>
+                        </div>
+
+                        <div class="timer-tab-card" style="width: 100%; box-sizing: border-box;">
+                            <div class="timer-tab-header">
+                                <i class="fas fa-clock" style="color: var(--main-color);"></i>
+                                <span id="timer-tab-status">Chưa bật hẹn giờ</span>
+                            </div>
+                            <div class="timer-tab-big" id="timer-tab-countdown">--:--</div>
+                            <div class="timer-progress-track">
+                                <div class="timer-progress-fill" id="timer-progress-fill"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1617,6 +2088,41 @@
         </div>
     </div>
 
+    <!-- Custom Notice / Alert Modal Dialog -->
+    <div id="notice-modal" class="custom-modal-overlay">
+        <div class="custom-modal-card notice-card">
+            <div class="notice-icon-wrapper" id="notice-icon-wrapper">
+                <i id="notice-icon" class="fas fa-hourglass-end"></i>
+            </div>
+            <h3 id="notice-title" class="notice-title">Buổi Tập Đã Hoàn Thành!</h3>
+            <p id="notice-message" class="notice-message">Thời gian tập (5 phút) đã kết thúc.</p>
+            
+            <div id="notice-stats-grid" class="notice-stats-grid" style="display: none;">
+                <div class="notice-stat-box">
+                    <i class="fas fa-stopwatch" style="color: var(--main-color);"></i>
+                    <div class="stat-num" id="notice-stat-time">05:00</div>
+                    <div class="stat-lbl">THỜI GIAN</div>
+                </div>
+                <div class="notice-stat-box">
+                    <i class="fas fa-hashtag" style="color: #818cf8;"></i>
+                    <div class="stat-num" id="notice-stat-bars">210</div>
+                    <div class="stat-lbl">Ô NHỊP</div>
+                </div>
+                <div class="notice-stat-box">
+                    <i class="fas fa-tachometer-alt" style="color: #fca311;"></i>
+                    <div class="stat-num" id="notice-stat-bpm">120</div>
+                    <div class="stat-lbl">TỐC ĐỘ</div>
+                </div>
+            </div>
+
+            <div class="custom-modal-footer" style="justify-content: center; margin-top: 20px;">
+                <button id="notice-confirm-btn" class="custom-modal-btn primary notice-btn">
+                    <i class="fas fa-check-circle"></i> Đồng Ý
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="footer-placeholder"></div>
     <div id="music-placeholder"></div>
     <div id="modals-placeholder"></div>
@@ -1693,6 +2199,142 @@
             const statBars = document.getElementById('stat-bars');
             const statAutostop = document.getElementById('stat-autostop');
             const autostopSelect = document.getElementById('autostop-select');
+            const timerTabStatus = document.getElementById('timer-tab-status');
+            const timerTabCountdown = document.getElementById('timer-tab-countdown');
+            const timerProgressFill = document.getElementById('timer-progress-fill');
+            const customTimerMins = document.getElementById('custom-timer-mins');
+            const customTimerSecs = document.getElementById('custom-timer-secs');
+            const applyCustomTimerBtn = document.getElementById('apply-custom-timer-btn');
+            const timerStepPills = document.querySelectorAll('.timer-step-pill');
+
+            // Countdown & Timer Helper Functions
+            function formatTimeMinSec(totalSecs) {
+                const mins = Math.floor(totalSecs / 60);
+                const secs = totalSecs % 60;
+                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            function updateAutoStopDisplay() {
+                if (!statAutostop) return;
+
+                // Sync custom input fields
+                if (customTimerMins && customTimerSecs) {
+                    const mins = Math.floor(autoStopDuration / 60);
+                    const secs = autoStopDuration % 60;
+                    customTimerMins.value = mins;
+                    customTimerSecs.value = secs;
+                }
+
+                if (autoStopDuration <= 0) {
+                    statAutostop.innerHTML = 'Tắt';
+                    if (timerTabCountdown) timerTabCountdown.textContent = '--:--';
+                    if (timerTabStatus) timerTabStatus.textContent = 'Chưa bật hẹn giờ';
+                    if (timerProgressFill) timerProgressFill.style.width = '0%';
+                    return;
+                }
+
+                const m = Math.floor(autoStopDuration / 60);
+                const s = autoStopDuration % 60;
+                const timeText = `${m} Phút${s > 0 ? ' ' + s + ' Giây' : ''}`;
+
+                if (isPlaying) {
+                    const remainingSecs = Math.max(0, autoStopDuration - practiceTimeSeconds);
+                    const formatted = formatTimeMinSec(remainingSecs);
+                    statAutostop.innerHTML = `<span class="timer-countdown-badge"><i class="fas fa-hourglass-half fa-spin"></i> Còn lại: ${formatted}</span>`;
+                    if (timerTabCountdown) timerTabCountdown.textContent = formatted;
+                    if (timerTabStatus) timerTabStatus.textContent = `⏳ Đang đếm ngược (${timeText})`;
+                    
+                    const percent = Math.min(100, Math.round((practiceTimeSeconds / autoStopDuration) * 100));
+                    if (timerProgressFill) timerProgressFill.style.width = `${percent}%`;
+                } else {
+                    let selectedOptText = autostopSelect.options[autostopSelect.selectedIndex]?.text;
+                    if (autostopSelect.value === 'custom' || !selectedOptText || selectedOptText.includes('Tùy chỉnh')) {
+                        selectedOptText = timeText;
+                    }
+                    statAutostop.textContent = selectedOptText;
+                    if (timerTabCountdown) timerTabCountdown.textContent = formatTimeMinSec(autoStopDuration);
+                    if (timerTabStatus) timerTabStatus.textContent = `Sẵn sàng (Đã hẹn ${selectedOptText})`;
+                    if (timerProgressFill) timerProgressFill.style.width = '0%';
+                }
+            }
+
+            function playCompletionChime() {
+                try {
+                    initAudioContext();
+                    if (!audioCtx) return;
+                    const now = audioCtx.currentTime;
+                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 arpeggio
+                    notes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+                        gain.gain.setValueAtTime(0.3, now + idx * 0.12);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + idx * 0.12);
+                        osc.stop(now + idx * 0.12 + 0.35);
+                    });
+                } catch(e) {}
+            }
+
+            function showNoticeModal({ title = 'Thông Báo', message = '', icon = 'fas fa-info-circle', type = 'info', stats = null }) {
+                const noticeModal = document.getElementById('notice-modal');
+                const noticeIcon = document.getElementById('notice-icon');
+                const noticeIconWrapper = document.getElementById('notice-icon-wrapper');
+                const noticeTitle = document.getElementById('notice-title');
+                const noticeMessage = document.getElementById('notice-message');
+                const noticeStatsGrid = document.getElementById('notice-stats-grid');
+                const noticeConfirmBtn = document.getElementById('notice-confirm-btn');
+
+                if (!noticeModal) {
+                    alert(message);
+                    return;
+                }
+
+                noticeIcon.className = icon;
+                noticeTitle.textContent = title;
+                noticeMessage.textContent = message;
+
+                if (type === 'success') {
+                    noticeIconWrapper.className = 'notice-icon-wrapper success';
+                } else if (type === 'warning') {
+                    noticeIconWrapper.className = 'notice-icon-wrapper warning';
+                } else if (type === 'error') {
+                    noticeIconWrapper.className = 'notice-icon-wrapper error';
+                } else {
+                    noticeIconWrapper.className = 'notice-icon-wrapper info';
+                }
+
+                if (stats) {
+                    noticeStatsGrid.style.display = 'grid';
+                    document.getElementById('notice-stat-time').textContent = stats.time || '00:00';
+                    document.getElementById('notice-stat-bars').textContent = stats.bars || 0;
+                    document.getElementById('notice-stat-bpm').textContent = stats.bpm || bpm;
+                } else {
+                    noticeStatsGrid.style.display = 'none';
+                }
+
+                noticeModal.classList.add('active');
+
+                const closeNotice = () => {
+                    noticeModal.classList.remove('active');
+                    noticeConfirmBtn.removeEventListener('click', closeNotice);
+                };
+
+                noticeConfirmBtn.addEventListener('click', closeNotice);
+            }
+
+            // Global alert override
+            window.alert = function(msg) {
+                showNoticeModal({
+                    title: 'Thông Báo',
+                    message: msg,
+                    icon: 'fas fa-info-circle',
+                    type: 'info'
+                });
+            };
 
             // Modal Elements
             const customSigModal = document.getElementById('custom-sig-modal');
@@ -1851,10 +2493,16 @@
 
                     if (s.autoStopDuration !== undefined) {
                         autoStopDuration = s.autoStopDuration;
-                        autostopSelect.value = autoStopDuration;
-                        const txt = autostopSelect.options[autostopSelect.selectedIndex]?.text || 'Tắt';
-                        statAutostop.textContent = autoStopDuration > 0 ? txt : 'Tắt';
+                        const matchedOpt = Array.from(autostopSelect.options).find(opt => parseInt(opt.value) === autoStopDuration);
+                        if (matchedOpt) {
+                            autostopSelect.value = matchedOpt.value;
+                        } else if (autoStopDuration > 0) {
+                            autostopSelect.value = 'custom';
+                        } else {
+                            autostopSelect.value = '0';
+                        }
                     }
+                    updateAutoStopDisplay();
 
                     if (s.isFlashingEnabled !== undefined) {
                         isFlashingEnabled = !!s.isFlashingEnabled;
@@ -2197,15 +2845,38 @@
                 playBtn.classList.add('playing');
                 playBtn.innerHTML = '<i class="fas fa-pause"></i>';
 
+                updateAutoStopDisplay();
+
                 practiceTimerInterval = setInterval(() => {
                     practiceTimeSeconds++;
                     const mins = Math.floor(practiceTimeSeconds / 60);
                     const secs = practiceTimeSeconds % 60;
                     statTime.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 
-                    if (autoStopDuration > 0 && practiceTimeSeconds >= autoStopDuration) {
-                        stopMetronome();
-                        alert(`Thời gian tập (${Math.floor(autoStopDuration / 60)} phút) đã kết thúc!`);
+                    if (autoStopDuration > 0) {
+                        updateAutoStopDisplay();
+
+                        if (practiceTimeSeconds >= autoStopDuration) {
+                            const finalMins = Math.floor(autoStopDuration / 60);
+                            const finalTime = statTime.textContent;
+                            const finalBars = totalBarsPlayed;
+                            const finalBpm = bpm;
+
+                            stopMetronome();
+                            playCompletionChime();
+
+                            showNoticeModal({
+                                title: '🎉 Buổi Tập Đã Hoàn Thành!',
+                                message: `Thời gian hẹn giờ tự động dừng (${finalMins} phút) đã kết thúc. Bạn đã có một buổi luyện tập tuyệt vời!`,
+                                icon: 'fas fa-hourglass-end',
+                                type: 'success',
+                                stats: {
+                                    time: finalTime,
+                                    bars: finalBars,
+                                    bpm: finalBpm
+                                }
+                            });
+                        }
                     }
                 }, 1000);
             }
@@ -2221,6 +2892,8 @@
                 const dots = beatDotsContainer.querySelectorAll('.beat-dot');
                 dots.forEach(dot => dot.classList.remove('active'));
                 pendulumDot.style.left = '0%';
+
+                updateAutoStopDisplay();
             }
 
             function togglePlay() {
@@ -2531,10 +3204,60 @@
             });
 
             autostopSelect.addEventListener('change', (e) => {
-                autoStopDuration = parseInt(e.target.value) || 0;
-                const txt = e.target.options[e.target.selectedIndex].text;
-                statAutostop.textContent = autoStopDuration > 0 ? txt : 'Tắt';
-                saveSettings();
+                const val = e.target.value;
+                if (val === 'custom') {
+                    if (customTimerMins) customTimerMins.focus();
+                } else {
+                    autoStopDuration = parseInt(val) || 0;
+                    updateAutoStopDisplay();
+                    saveSettings();
+                }
+            });
+
+            if (applyCustomTimerBtn) {
+                applyCustomTimerBtn.addEventListener('click', () => {
+                    const m = parseInt(customTimerMins.value) || 0;
+                    const s = parseInt(customTimerSecs.value) || 0;
+                    const totalSecs = Math.max(0, m * 60 + s);
+
+                    autoStopDuration = totalSecs;
+
+                    const matchedOpt = Array.from(autostopSelect.options).find(opt => parseInt(opt.value) === autoStopDuration);
+                    if (matchedOpt) {
+                        autostopSelect.value = matchedOpt.value;
+                    } else {
+                        autostopSelect.value = 'custom';
+                    }
+
+                    updateAutoStopDisplay();
+                    saveSettings();
+
+                    if (totalSecs > 0) {
+                        showNoticeModal({
+                            title: '⚙️ Đã Thiết Lập Hẹn Giờ',
+                            message: `Đã cài đặt tự động dừng máy nhịp sau ${m} phút ${s > 0 ? s + ' giây' : ''}.`,
+                            icon: 'fas fa-hourglass-start',
+                            type: 'info'
+                        });
+                    }
+                });
+            }
+
+            timerStepPills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    const addSecs = parseInt(pill.dataset.seconds) || 0;
+                    autoStopDuration = Math.max(0, autoStopDuration + addSecs);
+
+                    const matchedOpt = Array.from(autostopSelect.options).find(opt => parseInt(opt.value) === autoStopDuration);
+                    if (matchedOpt) {
+                        autostopSelect.value = matchedOpt.value;
+                    } else {
+                        autostopSelect.value = 'custom';
+                    }
+
+                    updateAutoStopDisplay();
+                    saveSettings();
+                });
             });
 
             // Swing mode listener

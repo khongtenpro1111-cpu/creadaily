@@ -106,6 +106,20 @@
         </div>
     </main>
 
+    <!-- Custom Notice Modal Dialog -->
+    <div id="notice-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 99999; padding: 20px; box-sizing: border-box;">
+        <div style="background: rgba(15, 20, 32, 0.96); border: 1px solid rgba(247, 37, 133, 0.4); border-radius: 20px; max-width: 400px; width: 100%; padding: 30px 24px; text-align: center; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(247, 37, 133, 0.3);">
+            <div style="width: 76px; height: 76px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981; color: #10b981; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 2.2rem; box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);">
+                <i class="fas fa-hourglass-end"></i>
+            </div>
+            <h3 style="font-size: 1.35rem; font-weight: 700; color: #fff; margin: 0 0 10px;">⏰ Hết Giờ Thử Thách!</h3>
+            <p style="font-size: 0.95rem; color: #94a3b8; margin: 0 0 24px; line-height: 1.5;">Thời gian đếm ngược của bạn đã kết thúc. Hãy nghỉ ngơi hoặc tiếp tục thử thách mới!</p>
+            <button id="notice-confirm-btn" style="width: 100%; max-width: 200px; padding: 12px 24px; border-radius: 25px; background: linear-gradient(135deg, #f72585, #4338ca); color: #fff; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(247, 37, 133, 0.4);">
+                <i class="fas fa-check-circle"></i> Đồng Ý
+            </button>
+        </div>
+    </div>
+
     <div id="footer-placeholder"></div>
     <div id="music-placeholder"></div>
     <div id="modals-placeholder"></div>
@@ -120,10 +134,48 @@
             const startBtn = document.getElementById('start-btn');
             const pauseBtn = document.getElementById('pause-btn');
             const resetBtn = document.getElementById('reset-btn');
+            const noticeModal = document.getElementById('notice-modal');
+            const noticeConfirmBtn = document.getElementById('notice-confirm-btn');
 
             let timerId;
             let timeLeft = 0;
             let isRunning = false;
+
+            function playCompletionChime() {
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    const audioCtx = new AudioContext();
+                    const now = audioCtx.currentTime;
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+                        gain.gain.setValueAtTime(0.3, now + idx * 0.12);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + idx * 0.12);
+                        osc.stop(now + idx * 0.12 + 0.35);
+                    });
+                } catch(e) {}
+            }
+
+            function showNotice() {
+                playCompletionChime();
+                if (noticeModal) {
+                    noticeModal.style.display = 'flex';
+                } else {
+                    alert("⏰ Hết giờ!");
+                }
+            }
+
+            if (noticeConfirmBtn) {
+                noticeConfirmBtn.addEventListener('click', () => {
+                    if (noticeModal) noticeModal.style.display = 'none';
+                });
+            }
 
             function updateDisplay() {
                 const minutes = Math.floor(timeLeft / 60);
@@ -140,7 +192,7 @@
                         if (timeLeft <= 0) {
                             clearInterval(timerId);
                             isRunning = false;
-                            alert("Hết giờ!");
+                            showNotice();
                         }
                     }, 1000);
                 }

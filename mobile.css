@@ -659,10 +659,13 @@
     }
 
     .modal-content,
-    .qr-history-modal-content {
+    .qr-history-modal-content,
+    .custom-modal-card,
+    .notice-card {
         width: 94% !important;
-        max-width: 310px !important;
-        padding: 16px 12px 12px 12px !important;
+        max-width: 320px !important;
+        padding: 20px 14px !important;
+        box-sizing: border-box !important;
     }
 
     .modal-content h2,
@@ -679,5 +682,36 @@
     .color-swatch {
         width: 32px !important;
         height: 32px !important;
+    }
+
+    .notice-stats-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 5px !important;
+        padding: 10px 4px !important;
+        margin: 14px 0 18px !important;
+    }
+
+    .notice-stat-box {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 6px 2px !important;
+    }
+
+    .notice-stat-box .stat-num {
+        font-size: 0.95rem !important;
+        font-weight: 800 !important;
+        white-space: nowrap !important;
+        line-height: 1.2 !important;
+    }
+
+    .notice-stat-box .stat-lbl {
+        font-size: 0.63rem !important;
+        font-weight: 700 !important;
+        white-space: nowrap !important;
+        letter-spacing: 0 !important;
+        margin-top: 2px !important;
     }
 }
